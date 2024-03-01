@@ -1,0 +1,80 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Caches
+*.db
+*.sqlite3
+__pycache__
+
+# Distribution / packaging
+*.pyz
+*.pyc
+*.pyo
+__pycache__
+dist/
+build/
+eggs/
+*.egg-info/
+MANIFEST
+
+# Virtual environments
+venv/
+env/
+.Python
+
+# Media files
+media/
+
+# Local development settings
+local_settings.py
+
+# Site-specific configurations
+*.suo
+*.user
+*.suo
+*.user
+*.suo
+*.user
+*.suo
+*.user
+*.suo
+*.user
+*.suo
+*.user
+*.suo
+*.user
+*.suo
+*.user
+*.suo
+*.user
+*.suo
+*.user
+*.suo
+*.user
+*.suo
+*.user
+*.suo
+*.user
+*.suo
+*.user
+*.suo
+*.user
+*.suo
+*.user
+
+
+# Ignore IDE-specific files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Ignore environment-specific files
+.env
+*.env
+
+# Ignore log files
+*.log
