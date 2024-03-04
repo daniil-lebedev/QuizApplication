@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'company',
     'user',
     'quiz',
+    'announcement',
 ]
 
 MIDDLEWARE = [
