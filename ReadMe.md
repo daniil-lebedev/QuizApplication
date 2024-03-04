@@ -1,7 +1,7 @@
 
 # Company Training Application for small to medium sized companies
 
-[![Build Status](https://travis-ci.org/your-username/your-repo.svg?branch=main)](https://travis-ci.org/your-username/your-repo)
+[![Build Status](https://travis-ci.org/daniil-lebedev/QuizApplication.svg?branch=main)](https://travis-ci.org/daniil-lebedev/QuizApplication)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 Description of your project.
