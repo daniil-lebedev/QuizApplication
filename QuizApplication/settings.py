@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'company',
     'user',
     'quiz',
+    'announcement',
+    'bootstrap5',
 ]
 
 MIDDLEWARE = [
