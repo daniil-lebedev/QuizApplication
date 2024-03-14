@@ -27,10 +27,9 @@ class AbstractUser(AbstractBaseUser, PermissionsMixin):
     groups = None
     user_permissions = None
 
-    objects = CustomUserManager()
-
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['email', 'first_name', 'last_name']
+    objects = CustomUserManager()
 
     def __str__(self):
         return self.email
