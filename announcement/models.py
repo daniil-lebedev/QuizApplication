@@ -1,7 +1,7 @@
 from django.db import models
 from django.urls import reverse
 
-from company.models import CompanyAdmin, Worker
+from company.models import TeamAdmin, Member
 from quiz.models import Quiz
 
 
@@ -20,7 +20,7 @@ class Announcement(models.Model):
     description = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
-    created_by = models.ForeignKey(CompanyAdmin, on_delete=models.CASCADE)
+    created_by = models.ForeignKey(TeamAdmin, on_delete=models.CASCADE)
 
     def __str__(self) -> str:
         return self.title
@@ -46,7 +46,7 @@ class Comment(models.Model):
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     announcement = models.ForeignKey(Announcement, on_delete=models.CASCADE)
-    created_by = models.ForeignKey(Worker, on_delete=models.CASCADE)
+    created_by = models.ForeignKey(Member, on_delete=models.CASCADE)
 
     def __str__(self) -> str:
         return self.content
@@ -69,7 +69,7 @@ class AdminComment(models.Model):
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     announcement = models.ForeignKey(Announcement, on_delete=models.CASCADE)
-    created_by = models.ForeignKey(CompanyAdmin, on_delete=models.CASCADE)
+    created_by = models.ForeignKey(TeamAdmin, on_delete=models.CASCADE)
 
     def __str__(self) -> str:
         return self.content

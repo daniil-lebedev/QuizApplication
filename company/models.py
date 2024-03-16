@@ -4,7 +4,7 @@ from django.urls import reverse
 from user.models import AbstractUser
 
 
-class Company(models.Model):
+class Team(models.Model):
     """
     This class represents a company.
 
@@ -26,14 +26,14 @@ class Company(models.Model):
 
     def get_absolute_url(self) -> str:
         # return the url for the company detail page
-        return reverse("company_detail", kwargs={"pk": self.pk})
+        return reverse("team_detail", kwargs={"pk": self.pk})
 
     class Meta:
-        verbose_name_plural = "companies"
+        verbose_name_plural = "teams"
         ordering = ["-created_at"]
 
 
-class CompanyAdmin(models.Model):
+class TeamAdmin(models.Model):
     """
     This class represents a company admin.
 
@@ -43,20 +43,20 @@ class CompanyAdmin(models.Model):
     created_at (datetime): The date and time the company admin was created.
     updated_at (datetime): The date and time the company admin was last updated.
     """
-    company = models.ForeignKey(Company, on_delete=models.CASCADE)
+    team = models.ForeignKey(Team, on_delete=models.CASCADE)
     user = models.ForeignKey(AbstractUser, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self) -> str:
-        return f"{self.user} - {self.company}"
+        return f"{self.user} - {self.team}"
 
     class Meta:
-        verbose_name_plural = "company admins"
+        verbose_name_plural = "team admins"
         ordering = ["-created_at"]
 
 
-class Worker(models.Model):
+class Member(models.Model):
     """
     This class represents a worker.
 
@@ -67,15 +67,15 @@ class Worker(models.Model):
     created_at (datetime): The date and time the worker was created.
     updated_at (datetime): The date and time the worker was last updated.
     """
-    company = models.ForeignKey(Company, on_delete=models.CASCADE)
-    managed_by = models.ForeignKey(CompanyAdmin, on_delete=models.CASCADE)
+    team = models.ForeignKey(Team, on_delete=models.CASCADE)
+    managed_by = models.ForeignKey(TeamAdmin, on_delete=models.CASCADE)
     user = models.ForeignKey(AbstractUser, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self) -> str:
-        return f"{self.user} - {self.company}"
+        return f"{self.user} - {self.team}"
 
     class Meta:
-        verbose_name_plural = "workers"
+        verbose_name_plural = "Members"
         ordering = ["-created_at"]
