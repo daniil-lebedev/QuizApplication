@@ -1,50 +1,50 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-from .models import Company, CompanyAdmin, Worker
+from .models import Team, TeamAdmin, Member
 
 
-class RegisterCompanyForm(forms.ModelForm):
+class RegisterTeamForm(forms.ModelForm):
     """
-    This class represents the form for registering a company.
+    This class represents the form for registering a Team.
     """
     class Meta:
-        model = Company
+        model = Team
         fields = ['name', 'description', 'email']
 
     # add warning message to the form
     def __init__(self, *args, **kwargs):
-        super(RegisterCompanyForm, self).__init__(*args, **kwargs)
+        super(RegisterTeamForm, self).__init__(*args, **kwargs)
         self.fields['name'].widget.attrs.update({'class': 'form-control'})
         self.fields['description'].widget.attrs.update({'class': 'form-control'})
         self.fields['email'].widget.attrs.update({'class': 'form-control'})
 
 
-class RegisterCompanyAdminForm(forms.ModelForm):
+class RegisterTeamAdminForm(forms.ModelForm):
     """
-    This class represents the form for registering a company admin.
+    This class represents the form for registering a Team admin.
     """
     class Meta:
-        model = CompanyAdmin
-        fields = ['company', 'user']
+        model = TeamAdmin
+        fields = ['team', 'user']
 
     # add warning message to the form
     def __init__(self, *args, **kwargs):
-        super(RegisterCompanyAdminForm, self).__init__(*args, **kwargs)
-        self.fields['company'].widget.attrs.update({'class': 'form-control'})
+        super(RegisterTeamAdminForm, self).__init__(*args, **kwargs)
+        self.fields['team'].widget.attrs.update({'class': 'form-control'})
         self.fields['user'].widget.attrs.update({'class': 'form-control'})
 
 
-class RegisterWorkerForm(forms.ModelForm):
+class RegisterMemberForm(forms.ModelForm):
     """
-    This class represents the form for registering a worker.
+    This class represents the form for registering a Member.
     """
     class Meta:
-        model = Worker
-        fields = ['company', 'user']
+        model = Member
+        fields = ['team', 'user']
 
     # add warning message to the form
     def __init__(self, *args, **kwargs):
-        super(RegisterWorkerForm, self).__init__(*args, **kwargs)
-        self.fields['company'].widget.attrs.update({'class': 'form-control'})
+        super(RegisterMemberForm, self).__init__(*args, **kwargs)
+        self.fields['team'].widget.attrs.update({'class': 'form-control'})
         self.fields['user'].widget.attrs.update({'class': 'form-control'})

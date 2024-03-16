@@ -24,11 +24,9 @@ class AbstractUser(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     created_at = models.DateTimeField(default=timezone.now)
-    groups = None
-    user_permissions = None
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['email', 'first_name', 'last_name']
+    REQUIRED_FIELDS = ['first_name', 'last_name']
     objects = CustomUserManager()
 
     def __str__(self):
@@ -37,7 +35,3 @@ class AbstractUser(AbstractBaseUser, PermissionsMixin):
     @property
     def full_name(self):
         return f"{self.first_name} {self.last_name}"
-
-    class Meta:
-        verbose_name = _('user')
-        verbose_name_plural = _('users')

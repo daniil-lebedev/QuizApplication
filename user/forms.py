@@ -24,7 +24,7 @@ class RegisterAbstractUserForm(UserCreationForm):
         fields = ["email", "first_name", "last_name", "email", "password1", "password2"]
 
 
-class LoginForm(AuthenticationForm):
+class LoginForm(forms.Form):
     """
     This class represents the form for logging in a user.
 
@@ -32,5 +32,5 @@ class LoginForm(AuthenticationForm):
     username (CharField): The username of the user.
     password (CharField): The password of the user.
     """
-    username = forms.CharField(label="Username", max_length=30)
-    password = forms.CharField(label="Password", widget=forms.PasswordInput)
+    email = forms.CharField(label="Email", max_length=30, help_text="Required.", required=True)
+    password = forms.CharField(label="Password", widget=forms.PasswordInput, help_text="Required.", required=True)

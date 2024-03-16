@@ -3,7 +3,7 @@ from datetime import timezone, datetime
 from django.db import models
 from django.urls import reverse
 
-from company.models import CompanyAdmin, Company, Worker
+from company.models import Team, TeamAdmin, Member
 
 
 class Quiz(models.Model):
@@ -22,8 +22,8 @@ class Quiz(models.Model):
     title = models.CharField(max_length=100)
     description = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
-    belongs_to = models.ForeignKey(Company, on_delete=models.CASCADE)
-    author = models.ForeignKey(CompanyAdmin, on_delete=models.CASCADE)
+    belongs_to = models.ForeignKey(Team, on_delete=models.CASCADE)
+    author = models.ForeignKey(TeamAdmin, on_delete=models.CASCADE)
     due_date = models.DateTimeField()
     date_created = models.DateTimeField(auto_now_add=True)
     points = models.IntegerField(default=0)
@@ -97,7 +97,7 @@ class Result(models.Model):
     date_taken (datetime): The date and time the user took the quiz.
     """
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
-    user = models.ForeignKey(Worker, on_delete=models.CASCADE)
+    user = models.ForeignKey(Member, on_delete=models.CASCADE)
     score = models.IntegerField()
     date_taken = models.DateTimeField(auto_now_add=True)
 
