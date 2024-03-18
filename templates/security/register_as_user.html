@@ -9,6 +9,7 @@
             </div>
         {% endfor %}
     {% endif %}
+    <h2>Create Team</h2>
     <form method="POST">
         {% csrf_token %}
         {{ form|crispy }}

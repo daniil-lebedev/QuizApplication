@@ -1,0 +1,21 @@
+{% extends 'base/base.html' %}
+{% block title %} Teams {% endblock %}
+
+{% block content %}
+    <h1>Teams</h1>
+    <ul>
+        {% for team in teams %}
+            <div class="flex-container">
+                <div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ team.name }}</h5>
+                        <p class="card-text">{{ team.description }}</p>
+                        <a href="{{ team.get_absolute_url }}" class="card-link">Card link</a>
+
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </ul>
+{% endblock %}
+```
