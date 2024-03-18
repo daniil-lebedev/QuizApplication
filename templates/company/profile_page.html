@@ -7,12 +7,14 @@
             {{ message }}
         </div>
     {% endif %}
-    <h1>User profile</h1>
-    <p>Name: {{ user.first_name }} {{ user.last_name }}</p>
+    <h1>Hello, {{ user.first_name }} {{ user.last_name }}</h1>
     <p>Email: {{ user.email }}</p>
-    <p>First name: {{ user.first_name }}</p>
-    <p>Last name: {{ user.last_name }}</p>
     <p>Joined: {{ user.created_at }}</p>
+    {% for team_admin in user.team_admins.all %}
+        <p>Team: {{ team_admin }}</p>
+        <a href="{% url 'team_detail' team_admin.id %}" class="btn btn-outline-primary">View Team</a>
+    {% endfor %}
     <a href="{% url 'user_logout' %}" class="btn btn-outline-danger">Logout</a>
+    <a href="{% url 'create_team' %}" class="btn btn-outline-primary">Create a Team</a>
 {% endblock %}
 ```

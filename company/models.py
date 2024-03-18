@@ -20,13 +20,13 @@ class Team(models.Model):
     email = models.EmailField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    admins = models.ManyToManyField(AbstractUser, through="TeamAdmin", related_name="team_admins")
 
     def __str__(self) -> str:
         return self.name
 
-    def get_absolute_url(self) -> str:
-        # return the url for the company detail page
-        return reverse("team_detail", kwargs={"pk": self.pk})
+    def get_absolute_url(self):
+        return reverse("team_detail", kwargs={"team_id": self.pk})
 
     class Meta:
         verbose_name_plural = "teams"
@@ -43,8 +43,8 @@ class TeamAdmin(models.Model):
     created_at (datetime): The date and time the company admin was created.
     updated_at (datetime): The date and time the company admin was last updated.
     """
-    team = models.ForeignKey(Team, on_delete=models.CASCADE)
-    user = models.ForeignKey(AbstractUser, on_delete=models.CASCADE)
+    team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="team_of_admin")
+    user = models.ForeignKey(AbstractUser, on_delete=models.CASCADE, related_name="team_admin")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
