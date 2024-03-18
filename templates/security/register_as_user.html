@@ -1,6 +1,6 @@
 {% extends 'base/base.html' %}
 {% load crispy_forms_filters %}
-{% block title %}Register company{% endblock %}
+{% block title %}Creaet Team{% endblock %}
 {% block content %}
     {% if messages %}
         {% for message in messages %}
@@ -11,7 +11,7 @@
     {% endif %}
     <form method="POST">
         {% csrf_token %}
-        {{ user_form|crispy}}
+        {{ form|crispy }}
         <button type="submit" class="btn btn-primary">Register</button>
     </form>
 {% endblock %}

@@ -24,4 +24,5 @@ urlpatterns = [
     path("quiz/", include('quiz.urls')),
     path("announcement/", include('announcement.urls')),
     path("", include('base.urls')),
+    path("security_module/", include('security_module.urls')),
 ]
