@@ -1,0 +1,31 @@
+{% extends 'base/base.html' %}
+{% block title %} All Announcements {% endblock %}
+{% block content %}
+    <h1>All Announcements</h1>
+    <div class="d-flex flex-wrap">
+        {% for announcement in announcements %}
+            <div class="flex-grow-1 flex-md-row flex-column mb-3">
+                <div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ announcement.title }}</h5>
+                        <h6 class="card-subtitle mb-2 text-body-secondary">Posted on: {{ announcement.created_at }}</h6>
+                        <p class="card-text">{{ announcement.description }}</p>
+                        <a href="{{ announcement.get_absolute_url }}" class="card-link">View</a>
+                        <!-- create a link to leave a comment -->
+                        {% if user.team_admin == announcement.created_by.id %}
+                            <a href="{% url 'create_admin_comment' announcement.id %}" class="card-link">Leave an
+                                Admin Comment</a>
+                        {% elif user.team_member == announcement.created_by.id %}
+                            <a href="{% url 'create_comment' announcement.id %}" class="card-link">Leave a Comment</a>
+
+                        {% else %}
+                            <p>Can't create comment</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+{% endblock %}
+```
