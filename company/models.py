@@ -69,7 +69,7 @@ class Member(models.Model):
     """
     team = models.ForeignKey(Team, on_delete=models.CASCADE)
     managed_by = models.ForeignKey(TeamAdmin, on_delete=models.CASCADE)
-    user = models.ForeignKey(AbstractUser, on_delete=models.CASCADE)
+    user = models.ForeignKey(AbstractUser, on_delete=models.CASCADE, related_name="team_member")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
