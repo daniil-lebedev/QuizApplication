@@ -1,0 +1,13 @@
+{% extends 'base/base.html' %}
+{% load crispy_forms_filters %}
+{% block title %} Create option {% endblock %}
+{% block content %}
+<div class="container">
+    <h2>Add New Option for "{{ question.question }}"</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form | crispy}}
+        <button type="submit" class="btn btn-primary">Add Option</button>
+    </form>
+</div>
+{% endblock %}

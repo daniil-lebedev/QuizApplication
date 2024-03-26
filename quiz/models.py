@@ -62,6 +62,16 @@ class Question(models.Model):
     def __str__(self):
         return self.question
 
+    def get_absolute_url(self):
+        return reverse("question_detail", kwargs={"pk": self.pk})
+
+    def update_point(self):
+        self.point = sum([option.point for option in self.option_set.all()])
+        self.save()
+
+    def get_options(self):
+        return self.option_set.all()
+
     class Meta:
         verbose_name_plural = "questions"
         ordering = ["-id"]
@@ -78,9 +88,13 @@ class Option(models.Model):
     option = models.CharField(max_length=200)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     is_correct = models.BooleanField(default=False)
+    point = models.IntegerField(default=0)
 
     def __str__(self):
         return self.option
+
+    def get_absolute_url(self):
+        return reverse("option_detail", kwargs={"pk": self.pk})
 
     class Meta:
         verbose_name_plural = "options"

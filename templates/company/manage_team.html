@@ -1,0 +1,17 @@
+{% extends 'base/base.html' %}
+{% block title %} Manage Your teams {% endblock %}
+{% block content %}
+    <h1>Manage Your Teams</h1>
+    {% for team in teams %}
+        <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"> Name: {{ team.team }}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Owner: {{ team.team.created_at }}</h6>
+                    <p class="card-text"> Description: {{ team.team.description }}</p>
+                    <p class="card-text"> Created by: {{ team.user.full_name }}</p>
+                    <a href="{% url 'team_detail' team.team.id %}" class="card-link">View Team</a>
+                </div>
+        </div>
+    {% endfor %}
+{% endblock %}
+```

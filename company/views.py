@@ -1,6 +1,8 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
+
+from quiz.models import Quiz
 from .forms import RegisterTeamForm
 from .models import TeamAdmin, Team
 from django.views.generic import DetailView
@@ -15,11 +17,21 @@ def index(request) -> HttpResponse:
 @login_required
 def user_profile(request) -> HttpResponse:
     """
-    Allows a user to view their profile.
+    Allows a user to view their profile, including quizzes for their administered teams.
     :param request: request for the page
     :return: response for the page
     """
-    return render(request, "company/profile_page.html")
+    # Get the teams where the user is an admin
+    user_teams = Team.objects.filter(team_of_admin__user=request.user).distinct()
+
+    # Filter quizzes that belong to any of the teams the user administers
+    quizzes = Quiz.objects.filter(belongs_to__in=user_teams).distinct()
+
+    context = {
+        "quizzes": quizzes,
+    }
+
+    return render(request, "company/profile_page.html", context)
 
 
 @login_required
@@ -82,3 +94,17 @@ class TeamDetailView(DetailView):
         team_admins = TeamAdmin.objects.filter(team=team)
         context["team_admins"] = team_admins
         return context
+
+
+def manage_team_view(request) -> render:
+    """
+    Allows a user to manage a company.
+    :param request: request for the page
+    :return: response for the page
+    """
+    # get all the teams for the specific user
+    teams = request.user.team_admin.all()
+    context = {
+        "teams": teams,
+    }
+    return render(request, "company/manage_team.html", context)

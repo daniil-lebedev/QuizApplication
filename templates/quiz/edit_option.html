@@ -1,0 +1,15 @@
+{% extends 'base/base.html' %}
+{% load crispy_forms_filters %}
+{% load crispy_forms_tags %}
+
+{% block title %}Edit Option{% endblock %}
+{% block content %}
+<div class="container">
+    <h2>Edit Option for Question "{{ option.question.question }}"</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form | crispy}}
+        <button type="submit" class="btn btn-success">Save Changes</button>
+    </form>
+</div>
+{% endblock %}
