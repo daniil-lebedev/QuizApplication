@@ -28,6 +28,9 @@ class Team(models.Model):
     def get_absolute_url(self):
         return reverse("team_detail", kwargs={"team_id": self.pk})
 
+    def get_admins(self):
+        return self.team_of_admin.all()
+
     class Meta:
         verbose_name_plural = "teams"
         ordering = ["-created_at"]
@@ -44,7 +47,7 @@ class TeamAdmin(models.Model):
     updated_at (datetime): The date and time the company admin was last updated.
     """
     team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="team_of_admin")
-    user = models.ForeignKey(AbstractUser, on_delete=models.CASCADE, related_name="team_admin")
+    user = models.ForeignKey(AbstractUser, on_delete=models.CASCADE, related_name="admin_of_team")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -67,7 +70,7 @@ class Member(models.Model):
     created_at (datetime): The date and time the worker was created.
     updated_at (datetime): The date and time the worker was last updated.
     """
-    team = models.ForeignKey(Team, on_delete=models.CASCADE)
+    team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="team_of_member")
     managed_by = models.ForeignKey(TeamAdmin, on_delete=models.CASCADE)
     user = models.ForeignKey(AbstractUser, on_delete=models.CASCADE, related_name="team_member")
     created_at = models.DateTimeField(auto_now_add=True)

@@ -10,4 +10,5 @@ urlpatterns = [
     path("create_team", views.create_team, name="create_team"),
     path("show_all_teams", views.show_all_teams, name="show_all_teams"),
     path("team_detail/<int:team_id>", login_required(TeamDetailView.as_view()), name="team_detail"),
+    path("manage_team_view", views.manage_team_view, name="manage_team_view"),
 ]
