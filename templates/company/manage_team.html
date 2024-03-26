@@ -5,11 +5,10 @@
     {% for team in teams %}
         <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title"> Name: {{ team.team }}</h5>
-                    <h6 class="card-subtitle mb-2 text-muted">Owner: {{ team.team.created_at }}</h6>
-                    <p class="card-text"> Description: {{ team.team.description }}</p>
-                    <p class="card-text"> Created by: {{ team.user.full_name }}</p>
-                    <a href="{% url 'team_detail' team.team.id %}" class="card-link">View Team</a>
+                    <h5 class="card-title"> Name: {{ team.name }}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Owner: {{ team.created_at }}</h6>
+                    <p class="card-text"> Description: {{ team.description }}</p>
+                    <p class="card-text"> Created by: {{ team.team_of_admin.name }}</p>
                 </div>
         </div>
     {% endfor %}
