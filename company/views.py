@@ -1,10 +1,10 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 
 from quiz.models import Quiz
 from .forms import RegisterTeamForm
-from .models import TeamAdmin, Team
+from .models import TeamAdmin, Team, Member
 from django.views.generic import DetailView
 
 from django.http import HttpResponse
@@ -24,11 +24,15 @@ def user_profile(request) -> HttpResponse:
     # Get the teams where the user is an admin
     user_teams = Team.objects.filter(team_of_admin__user=request.user).distinct()
 
+    # get teams where the user is a member
+    user_teams_member_of = user_teams.union(Team.objects.filter(team_of_member__user=request.user).distinct())
+
     # Filter quizzes that belong to any of the teams the user administers
     quizzes = Quiz.objects.filter(belongs_to__in=user_teams).distinct()
 
     context = {
         "quizzes": quizzes,
+        "user_teams_member_of": user_teams_member_of,
     }
 
     return render(request, "company/profile_page.html", context)
@@ -60,18 +64,14 @@ def create_team(request) -> HttpResponse or redirect:
     return render(request, "company/register_team.html", context)
 
 
-@login_required
-def show_all_teams(request) -> HttpResponse:
-    """
-    Shows all teams.
-    :param request: request for the page
-    :return: response for the page
-    """
+def show_all_teams(request):
     teams = Team.objects.all()
-    context = {
-        "teams": teams,
-    }
-    return render(request, "company/show_all_teams.html", context)
+
+    for team in teams:
+        team.can_join = not (team.team_of_admin.filter(user=request.user).exists() or
+                             team.team_of_member.filter(user=request.user).exists())
+
+    return render(request, 'company/show_all_teams.html', {'teams': teams})
 
 
 class TeamDetailView(DetailView):
@@ -96,6 +96,7 @@ class TeamDetailView(DetailView):
         return context
 
 
+@login_required
 def manage_team_view(request) -> render:
     """
     Allows a user to manage a company.
@@ -103,8 +104,61 @@ def manage_team_view(request) -> render:
     :return: response for the page
     """
     # get all the teams for the specific user
-    teams = request.user.team_admin.all()
+    teams = request.user.team_admins.all()
     context = {
         "teams": teams,
     }
     return render(request, "company/manage_team.html", context)
+
+
+@login_required
+def edit_team(request, team_id):
+    """
+    View function to edit an existing Team.
+    :param request: HttpRequest object
+    :param team_id: ID of the Team to edit
+    :return: HttpResponse object with the team edit form
+    """
+    team = get_object_or_404(Team, id=team_id)
+
+    # Check if the current user is allowed to edit the team
+    # This check assumes you have a way to determine if the user is an admin of the team
+    if not team.team_of_admin.filter(user=request.user).exists():
+        # Handle unauthorized access, e.g., by showing an error message or redirecting
+        return redirect('unauthorized_access_url')  # Replace with an appropriate response
+
+    if request.method == 'POST':
+        form = RegisterTeamForm(request.POST, instance=team)
+        if form.is_valid():
+            form.save()
+            # Redirect to a success page, such as the team detail view
+            return redirect('team_detail', team_id=team.id)
+    else:
+        form = RegisterTeamForm(instance=team)
+
+    context = {
+        'form': form,
+        'team': team
+    }
+    return render(request, 'company/edit_team.html', context)
+
+
+@login_required
+def join_team(request, team_id):
+    team = get_object_or_404(Team, id=team_id)
+    # Attempt to get the first admin for the team
+    admin_relation = TeamAdmin.objects.filter(team=team).first()
+    print(admin_relation)
+
+    if not Member.objects.filter(team=team, user=request.user).exists():
+        if admin_relation:
+            # Create a new member with the first admin found as the manager
+            Member.objects.create(team=team, user=request.user, managed_by=admin_relation)
+            messages.success(request, "You have successfully joined the team.")
+        else:
+            # If no admin is found, an error message is displayed
+            messages.error(request, "The team does not have an admin.")
+    else:
+        messages.error(request, "You are already a member of this team.")
+
+    return redirect('team_detail', team_id=team_id)

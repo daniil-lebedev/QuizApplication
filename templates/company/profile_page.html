@@ -11,7 +11,7 @@
     <p>Email: {{ user.email }}</p>
     <p>Joined: {{ user.created_at }}</p>
     <h3>Quizzes made by you</h3>
-    <div class="d-flex p-2 m-2">
+    <div class="d-flex p-2 m-2 ">
         {% for quiz in quizzes %}
             <div class="card" style="width: 18rem;">
                 <div class="card-body">
@@ -29,11 +29,12 @@
     <h3>Teams you are an admin of</h3>
     {% for team_admin in user.team_admins.all %}
         <div class="card" style="width: 18rem;">
-                <div class="card-body">
-                    <h5 class="card-title">{{ team_admin }}</h5>
-                    <h6 class="card-subtitle mb-2 text-muted">Created: {{ team_admin.created_at }}</h6>
-                    <p class="card-text">{{ team_admin.description }}</p>
-                </div>
+            <div class="card-body">
+                <h5 class="card-title">{{ team_admin }}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">Created: {{ team_admin.created_at }}</h6>
+                <p class="card-text">{{ team_admin.description }}</p>
+                <a href="{% url 'edit_team' team_admin.id %}" class="btn btn-outline-primary">Edit team</a>
+            </div>
         </div>
         <br>
         <a href="{% url 'team_detail' team_admin.id %}" class="btn btn-outline-primary">View Team</a>
@@ -41,6 +42,19 @@
         <a href="{% url 'manage_team_view' %}" class="btn btn-outline-primary">Manage Team</a>
         <a href="{% url 'create_quiz' %}" class="btn btn-outline-primary">Create Quiz</a>
     {% endfor %}
+    <h3>Teams you are a member of</h3>
+    {% if user.team_member %}
+        {% for team_member in user.team_member.all %}
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">{{ team_member }}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Joined: {{ team_member.created_at }}</h6>
+                    <a href="{% url 'team_detail' team_member.team.id %}" class="btn btn-outline-primary">View Team</a>
+                </div>
+            </div>
+            <br>
+        {% endfor %}
+    {% endif %}
     <a href="{% url 'user_logout' %}" class="btn btn-outline-danger">Logout</a>
     <a href="{% url 'create_team' %}" class="btn btn-outline-primary">Create a Team</a>
 {% endblock %}
