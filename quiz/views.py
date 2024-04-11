@@ -1,11 +1,13 @@
+from django.contrib import messages
 from django.forms import inlineformset_factory
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
+from django.utils import timezone
 
-from company.models import TeamAdmin
+from company.models import TeamAdmin, Member, Team
 from .forms import CreateQuizForm, CreateQuestionForm, CreateOptionForm
-from .models import Quiz, Question, Option
+from .models import Quiz, Question, Option, Result
 
 
 @login_required
@@ -29,6 +31,41 @@ def create_quiz(request):
         form = CreateQuizForm()
 
     return render(request, "quiz/create_quiz.html", {"form": form})
+
+
+@login_required
+def take_quiz(request, team_id, quiz_id):
+    team = get_object_or_404(Team, id=team_id)
+    quiz = get_object_or_404(Quiz, id=quiz_id, belongs_to=team)
+
+    if timezone.now() > quiz.due_date:
+        messages.error(request, "This quiz is no longer available.")
+        return redirect('home')  # Adjust as needed
+
+    if not Member.objects.filter(team=team, user=request.user).exists():
+        messages.error(request, "You are not authorized to take this quiz.")
+        return redirect('home')  # Adjust as needed
+
+    team_member = Member.objects.get(team=team, user=request.user)
+
+    if request.method == 'POST':
+        score = 0
+
+        for question in quiz.question_set.all():
+            # Extract the chosen option ID from POST data for each question
+            chosen_option_id = request.POST.get(str(question.id))
+            if chosen_option_id:
+                chosen_option = Option.objects.filter(id=chosen_option_id, question=question).first()
+                if chosen_option and chosen_option.is_correct:
+                    score += chosen_option.point  # Add the option's point value to the score
+
+        # Save the result with the calculated score
+        Result.objects.create(quiz=quiz, user=team_member, score=score, date_taken=timezone.now())
+
+        messages.success(request, "Your quiz results have been saved.")
+        return redirect('user_profile')  # Adjust as needed
+
+    return render(request, 'quiz/take_quiz.html', {'quiz': quiz, 'team': team})
 
 
 @login_required

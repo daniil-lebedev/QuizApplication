@@ -111,7 +111,7 @@ class Result(models.Model):
     date_taken (datetime): The date and time the user took the quiz.
     """
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
-    user = models.ForeignKey(Member, on_delete=models.CASCADE)
+    user = models.ForeignKey(Member, on_delete=models.CASCADE, related_name="results")
     score = models.IntegerField()
     date_taken = models.DateTimeField(auto_now_add=True)
 
