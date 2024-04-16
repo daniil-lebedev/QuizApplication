@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 
+from education_board.models import Board
 from quiz.models import Quiz
 from .forms import RegisterTeamForm
 from .models import TeamAdmin, Team, Member
@@ -30,9 +31,13 @@ def user_profile(request) -> HttpResponse:
     # Filter quizzes that belong to any of the teams the user administers
     quizzes = Quiz.objects.filter(belongs_to__in=user_teams).distinct()
 
+    # get all the boards for the user
+    boards = Board.objects.filter(team__in=user_teams).distinct()
+
     context = {
         "quizzes": quizzes,
         "user_teams_member_of": user_teams_member_of,
+        "boards": boards,
     }
 
     return render(request, "company/profile_page.html", context)

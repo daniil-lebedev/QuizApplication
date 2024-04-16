@@ -5,6 +5,8 @@ from django.urls import reverse
 
 from company.models import Team, TeamAdmin, Member
 
+from education_board.models import Board
+
 
 class Quiz(models.Model):
     """
@@ -27,6 +29,9 @@ class Quiz(models.Model):
     due_date = models.DateTimeField()
     date_created = models.DateTimeField(auto_now_add=True)
     points = models.IntegerField(default=0)
+    # Quiz can be created without an educational board, but it can be added later
+    educational_board = models.ForeignKey(Board, on_delete=models.CASCADE, related_name="quizzes", default=None,
+                                          null=True, blank=True)
 
     def __str__(self):
         return self.title

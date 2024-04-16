@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.views.generic import DetailView
@@ -40,7 +41,7 @@ def create_announcement(request) -> render:
         if form.is_valid():
             announcement = form.save(commit=False)
             # set the team admin who created the announcement
-            announcement.created_by = request.user.team_admin.first()
+            announcement.created_by = request.user.team_admins.first()
             form.save()
             # redirect to the announcement detail page
             return redirect("announcement_detail", pk=form.instance.pk)
@@ -94,7 +95,8 @@ def create_admin_comment(request, pk) -> render:
         if form.is_valid():
             comment = form.save(commit=False)
             comment.announcement = announcement
-            comment.created_by = request.user.team_admin.first()
+            comment.created_by = request.user.team_admins.first()
             form.save()
+            messages.success(request, "Comment created successfully")
             return redirect("announcement_detail", pk=pk)
     return render(request, "announcement/create_comment.html", {"form": form})
