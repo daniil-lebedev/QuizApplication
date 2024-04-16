@@ -9,7 +9,7 @@ class CreateQuizForm(forms.ModelForm):
 
     class Meta:
         model = Quiz
-        fields = ['title', 'description', 'due_date', 'belongs_to']
+        fields = ['title', 'description', 'due_date', 'belongs_to', 'educational_board']
         widgets = {
             'due_date': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
             'title': forms.TextInput(attrs={'class': 'form-control'}),
