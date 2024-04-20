@@ -33,6 +33,9 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 DEBUG = os.getenv('DJANGO_DEBUG')
 ALLOWED_HOSTS = ['*']
 
+SESSION_EXPIRE_SECONDS = 1800  # Expire after 30 minutes
+SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True  # Expire after inactivity
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # Invalid session after browser close
 # Application definition
 
 INSTALLED_APPS = [
@@ -65,6 +68,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django_session_timeout.middleware.SessionTimeoutMiddleware',
 ]
 
 ROOT_URLCONF = 'QuizApplication.urls'

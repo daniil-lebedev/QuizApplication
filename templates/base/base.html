@@ -51,8 +51,14 @@
 </nav>
 
 {% block content %}
-    {% block messages %}
-    {% endblock %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert btn-close-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+    {% block body %}{% endblock %}
 {% endblock %}
 
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"

@@ -2,11 +2,6 @@
 {% block title %} User profile {% endblock %}
 
 {% block content %}
-    {% if message %}
-        <div class="alert alert-success" role="alert">
-            {{ message }}
-        </div>
-    {% endif %}
     <h1>Hello, {{ user.first_name }} {{ user.last_name }}</h1>
     <p>Email: {{ user.email }}</p>
     <p>Joined: {{ user.created_at }}</p>
