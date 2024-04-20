@@ -35,7 +35,6 @@ def login_user(request) -> HttpResponse or redirect:
         form = LoginForm(request.POST)
         if form.is_valid():
             authenticated_user = authenticate(email=form.cleaned_data['email'], password=form.cleaned_data['password'])
-            print(authenticated_user is not None)
             if authenticated_user is not None:
                 login(request, authenticated_user)
                 messages.success(request, "You are now logged in.")

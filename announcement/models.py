@@ -47,7 +47,7 @@ class Comment(models.Model):
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     announcement = models.ForeignKey(Announcement, on_delete=models.CASCADE)
-    created_by = models.ForeignKey(Member, on_delete=models.CASCADE)
+    created_by = models.ForeignKey(Member or TeamAdmin, on_delete=models.CASCADE)
 
     def __str__(self) -> str:
         return self.content
