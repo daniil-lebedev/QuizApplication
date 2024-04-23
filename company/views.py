@@ -11,10 +11,6 @@ from django.views.generic import DetailView
 from django.http import HttpResponse
 
 
-def index(request) -> HttpResponse:
-    return HttpResponse("Hello, world. You're at the polls index.")
-
-
 @login_required
 def user_profile(request) -> HttpResponse:
     """
@@ -60,7 +56,6 @@ def create_team(request) -> HttpResponse or redirect:
             # create team admin without admin form
             team_admin = TeamAdmin(team=team, user=request.user)
             team_admin.save()
-            messages.success(request, "Team admin created successfully.")
             return redirect("user_profile")
     context = {
         "team_form": team_form,
@@ -69,6 +64,7 @@ def create_team(request) -> HttpResponse or redirect:
     return render(request, "company/register_team.html", context)
 
 
+@login_required
 def show_all_teams(request):
     teams = Team.objects.all()
 
@@ -88,6 +84,7 @@ class TeamDetailView(DetailView):
     context_object_name = "team"
     pk_url_kwarg = "team_id"
 
+    @login_required
     def get_context_data(self, **kwargs) -> dict:
         """
         Get the context for the team detail view.
