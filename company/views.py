@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 
 from education_board.models import Board
-from quiz.models import Quiz
+from quiz.models import Quiz, Result
 from .forms import RegisterTeamForm
 from .models import TeamAdmin, Team, Member
 from django.views.generic import DetailView
@@ -22,10 +22,13 @@ def user_profile(request) -> HttpResponse:
     user_teams = Team.objects.filter(team_of_admin__user=request.user).distinct()
 
     # get teams where the user is a member
-    user_teams_member_of = user_teams.union(Team.objects.filter(team_of_member__user=request.user).distinct())
+    user_teams_member_of = Team.objects.filter(team_of_member__user=request.user).distinct()
 
     # Filter quizzes that belong to any of the teams the user administers
     quizzes = Quiz.objects.filter(belongs_to__in=user_teams).distinct()
+
+    # Fileter results that belong to any of the teams the user administers
+    results = Result.objects.filter(user__user=request.user).distinct()
 
     # get all the boards for the user
     boards = Board.objects.filter(team__in=user_teams).distinct()
@@ -34,9 +37,11 @@ def user_profile(request) -> HttpResponse:
         "quizzes": quizzes,
         "user_teams_member_of": user_teams_member_of,
         "boards": boards,
+        "results": results,
     }
 
     return render(request, "company/profile_page.html", context)
+
 
 
 @login_required
@@ -84,7 +89,6 @@ class TeamDetailView(DetailView):
     context_object_name = "team"
     pk_url_kwarg = "team_id"
 
-    @login_required
     def get_context_data(self, **kwargs) -> dict:
         """
         Get the context for the team detail view.
@@ -150,13 +154,14 @@ def join_team(request, team_id):
     team = get_object_or_404(Team, id=team_id)
     # Attempt to get the first admin for the team
     admin_relation = TeamAdmin.objects.filter(team=team).first()
-    print(admin_relation)
 
     if not Member.objects.filter(team=team, user=request.user).exists():
         if admin_relation:
             # Create a new member with the first admin found as the manager
-            Member.objects.create(team=team, user=request.user, managed_by=admin_relation)
+            member = Member.objects.create(team=team, user=request.user, managed_by=admin_relation)
+            member.save()
             messages.success(request, "You have successfully joined the team.")
+            return redirect('team_detail', team_id=team_id)
         else:
             # If no admin is found, an error message is displayed
             messages.error(request, "The team does not have an admin.")

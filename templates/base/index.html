@@ -1,41 +1,33 @@
 {% extends 'base/base.html' %}
-{% block title %} Welcome Page {% endblock %}
+{% block title %} Welcome to OpenTrain {% endblock %}
 {% block content %}
-    <!-- Welcome Section -->s
-    <section class="container mt-5">
-        <div class="row">
-            <div class="col-md-8 offset-md-2">
-                <h1 class="text-center mb-4">Personnel Training Application</h1>
-                <p class="lead">OpenTrain is a cutting-edge web-based application tailored to redefine employee training
-                    paradigms within organizations. It serves as a dynamic and fully customizable solution, catering to
-                    the
-                    diverse needs and objectives of modern workplaces. Unlike traditional training methods, OpenTrain
-                    distinguishes itself by being open-source, granting companies unprecedented control to mold training
-                    modules according to their unique requirements.
-                </p>
-                <ol class="list-group list-group-numbered">
-                    <li class="list-group-item">Customization: OpenTrain offers unparalleled flexibility, empowering
-                        companies to personalize training modules to align seamlessly with various industries, job
-                        roles,
-                        and skill levels.
-                    </li>
-                    <li class="list-group-item">Open-Source: As an open-source platform, OpenTrain fosters collaboration
-                        and
-                        innovation within organizations, encouraging continuous enhancement and adaptation to industry
-                        trends.
-                    </li>
-                    <li class="list-group-item">User-Friendly Interface: With an intuitive user interface, OpenTrain
-                        ensures
-                        easy accessibility to training materials and seamless tracking of employee progress.
-                    </li>
-                    <li class="list-group-item">Comprehensive Analytics: OpenTrain provides robust analytics
-                        capabilities,
-                        enabling companies to evaluate the efficacy of training programs and pinpoint areas for
-                        enhancement.
-                    </li>
-                </ol>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <h1 class="text-center">Welcome to OpenTrain</h1>
+            <p class="lead text-center mt-3">
+                OpenTrain is a cutting-edge, web-based application designed to transform how organizations conduct employee training. This platform is uniquely customizable and open-source, offering a new level of adaptability in corporate training environments.
+            </p>
+            <div class="card mt-4">
+                <div class="card-body">
+                    <h2 class="card-title">Why Choose OpenTrain?</h2>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <strong>Customization:</strong> Tailor training modules to fit the specific needs of different industries, job roles, and employee skill levels.
+                        </li>
+                        <li class="list-group-item">
+                            <strong>Open-Source:</strong> Enhance and adapt your training environment continuously with the support of a community-driven platform.
+                        </li>
+                        <li class="list-group-item">
+                            <strong>User-Friendly Interface:</strong> Easy access to materials and efficient tracking of employee training progress.
+                        </li>
+                        <li class="list-group-item">
+                            <strong>Comprehensive Analytics:</strong> Measure the impact of your training programs with advanced analytics to continually improve educational outcomes.
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
-    </section>
+    </div>
+</div>
 {% endblock %}
-```

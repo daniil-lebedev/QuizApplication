@@ -1,11 +1,14 @@
 {% extends 'base/base.html' %}
 {% block title %}All Quizzes{% endblock %}
 {% block content %}
-    <h1>All Quizzes</h1>
-    <ul>
+<div class="container mt-4">
+    <h1 class="mb-3">All Quizzes</h1>
+    <div class="list-group">
         {% for quiz in quizzes %}
-            <li><a href="{% url 'view_quiz' quiz.id %}">{{ quiz.title }}</a></li>
+            <a href="{% url 'view_quiz' quiz.id %}" class="list-group-item list-group-item-action">{{ quiz.title }}</a>
+        {% empty %}
+            <div class="list-group-item">No quizzes available.</div>
         {% endfor %}
-    </ul>
+    </div>
+</div>
 {% endblock %}
-```
