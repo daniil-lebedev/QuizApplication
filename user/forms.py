@@ -32,5 +32,5 @@ class LoginForm(forms.Form):
     username (CharField): The username of the user.
     password (CharField): The password of the user.
     """
-    email = forms.CharField(label="Email", max_length=30, help_text="Required.", required=True)
+    email = forms.CharField(label="Email", max_length=40, help_text="Required.", required=True)
     password = forms.CharField(label="Password", widget=forms.PasswordInput, help_text="Required.", required=True)

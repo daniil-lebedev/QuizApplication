@@ -2,8 +2,9 @@ from django.contrib import messages
 from django.forms import inlineformset_factory
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseForbidden
 from django.utils import timezone
+from django.db.models import Avg
 
 from company.models import TeamAdmin, Member, Team
 from .forms import CreateQuizForm, CreateQuestionForm, CreateOptionForm
@@ -44,7 +45,7 @@ def take_quiz(request, team_id, quiz_id):
 
     if not Member.objects.filter(team=team, user=request.user).exists():
         messages.error(request, "You are not authorized to take this quiz.")
-        return redirect('home')  # Adjust as needed
+        return redirect('user_profile')  # Adjust as needed
 
     team_member = Member.objects.get(team=team, user=request.user)
 
@@ -60,10 +61,10 @@ def take_quiz(request, team_id, quiz_id):
                     score += chosen_option.point  # Add the option's point value to the score
 
         # Save the result with the calculated score
-        Result.objects.create(quiz=quiz, user=team_member, score=score, date_taken=timezone.now())
-
+        result = Result.objects.create(quiz=quiz, user=team_member, score=score, date_taken=timezone.now())
+        result.save()
         messages.success(request, "Your quiz results have been saved.")
-        return redirect('user_profile')  # Adjust as needed
+        return redirect('view_result', quiz_id=quiz_id, team_id=team_id)
 
     return render(request, 'quiz/take_quiz.html', {'quiz': quiz, 'team': team})
 
@@ -180,3 +181,66 @@ def show_all_quizzes(request):
 def view_quiz(request, quiz_id):
     quiz = get_object_or_404(Quiz, id=quiz_id, belongs_to__admins=request.user)
     return render(request, 'quiz/view_quiz.html', {'quiz': quiz})
+
+
+@login_required
+def view_result(request, quiz_id, team_id):
+    """
+    Show user the result of the quiz they took.
+    :param request: request for the page
+    :param quiz_id: ID of the quiz
+    :param team_id: ID of the team
+    :param user_id: ID of the user
+    :return: HttpResponse object with the quiz result
+    """
+    quiz = get_object_or_404(Quiz, id=quiz_id)
+    team = get_object_or_404(Team, id=team_id)
+    user = get_object_or_404(request.user.__class__, id=request.user.id)
+    member = get_object_or_404(Member, user=user, team=team)
+
+    result = get_object_or_404(Result, quiz=quiz, user=member)
+    total_points = quiz.points
+    score = result.score
+    percentage = (score / total_points * 100) if total_points > 0 else 0
+
+    context = {
+        'result': result,
+        'percentage': percentage,
+        'quiz': quiz,
+        'team': team,
+        'member': member
+    }
+    return render(request, 'quiz/view_result.html', context)
+
+
+from django.shortcuts import render, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from .models import Quiz, Team, Result, Member
+from django.db.models import Avg
+
+
+@login_required
+def view_quiz_analysis(request, quiz_id, team_id):
+    quiz = get_object_or_404(Quiz, id=quiz_id)
+    team = get_object_or_404(Team, id=team_id)
+
+    if not team.team_of_admin.filter(user=request.user).exists():
+        return HttpResponseForbidden("You are not authorized to view this page.")
+
+    total_members = Member.objects.filter(team=team).count()
+    participants = Result.objects.filter(quiz=quiz, user__team=team).count()
+    average_score = Result.objects.filter(quiz=quiz, user__team=team).aggregate(Avg('score'))['score__avg'] or 0
+    detailed_results = Result.objects.filter(quiz=quiz, user__team=team).select_related('user')
+
+    participation_rate = (participants / total_members * 100) if total_members > 0 else 0
+
+    context = {
+        'quiz': quiz,
+        'team': team,
+        'total_members': total_members,
+        'participants': participants,
+        'average_score': average_score,
+        'detailed_results': detailed_results,
+        'participation_rate': participation_rate
+    }
+    return render(request, 'quiz/view_quiz_analysis.html', context)

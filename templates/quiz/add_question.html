@@ -1,11 +1,21 @@
 {% extends 'base/base.html' %}
-{% block title%} Create a question {% endblock %}
+{% load crispy_forms_filters %}
+{% load crispy_forms_tags %} 
+{% block title %}Create a Question{% endblock %}
+
 {% block content %}
-    <h1>Create a question</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Submit</button>
-    </form>
+<div class="container mt-5">
+    <h1 class="mb-3">Create a Question</h1>
+    <div class="card">
+        <div class="card-body">
+            <form method="POST" class="needs-validation" novalidate>
+                {% csrf_token %}
+                {{ form|crispy }}  
+                <div class="text-right">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}
-```

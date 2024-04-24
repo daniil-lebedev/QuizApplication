@@ -2,22 +2,51 @@
 {% block title %} {{ team.name }} Page {% endblock %}
 
 {% block content %}
-    <h1>{{ team.name }}</h1>
-    <p>{{ team.description }}</p>
-    <h2>Quizzes</h2>
-    <div class="row">
-        {% for quiz in team.quiz_set.all %}
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title
-                        ">{{ quiz.name }}</h5>
-                        <p class="card-text">{{ quiz.description }}</p>
-                        <a href="{% url 'take_quiz' team.id quiz.id %}" class="btn btn-outline-danger">Take Quiz</a>
+    <div class="container mt-4">
+        <h1 class="display-4 text-center mb-4">{{ team.name }}</h1>
+        <p class="lead text-center">{{ team.description }}</p>
+
+        {% if team.boards_of_team.all %}
+            <h2 class="mb-3">Educational Boards</h2>
+            <div class="row">
+                {% for board in team.boards_of_team.all %}
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ board.title }}</h5>
+                                <p class="card-text">{{ board.description }}</p>
+                                <a href="{% url 'board_detail' board.id %}" class="btn btn-primary">View Board</a>
+                            </div>
+                        </div>
                     </div>
-                </div>
+                {% endfor %}
             </div>
-        {% endfor %}
+        {% else %}
+            <div class="alert alert-info" role="alert">
+                No educational boards available at the moment.
+            </div>
+        {% endif %}
+
+        {% if team.quiz_set.all %}
+            <h2 class="mb-3">Quizzes</h2>
+            <div class="row">
+                {% for quiz in team.quiz_set.all %}
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-body">
+                                <h3 class="card-title">{{ quiz.name }}</h3>
+                                <h6 class="card-subtitle mb-2 text-muted">{{ quiz.due_date }}</h6>
+                                <p class="card-text">{{ quiz.description }}</p>
+                                <a href="{% url 'take_quiz' team.id quiz.id %}" class="btn btn-outline-primary">Take Quiz</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="alert alert-info" role="alert">
+                No quizzes available at the moment.
+            </div>
+        {% endif %}
     </div>
 {% endblock %}
-```
