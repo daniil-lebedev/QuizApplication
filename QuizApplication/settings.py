@@ -16,6 +16,7 @@ from pathlib import Path
 import crispy_bootstrap5
 import crispy_forms
 from dotenv import load_dotenv
+import exception_management
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -54,6 +55,7 @@ INSTALLED_APPS = [
     "crispy_bootstrap5",
     'security_module',
     'education_board',
+    'exception_management',
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
@@ -143,3 +145,9 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Define custom error handlers
+HANDLER404 = 'exception_management.views.error_404'
+HANDLER500 = 'exception_management.views.error_500'
+HANDLER403 = 'exception_management.views.error_403'
+HANDLER400 = 'exception_management.views.error_400'
