@@ -82,7 +82,7 @@
                 <p>No announcements found.</p>
             {% endfor %}
         </div>
-        <a href="{% url 'create_announcement' %}" class="btn btn-primary mb-4">Create Announcement</a>
+        <a href="{% url 'create_announcement' team.id %}" class="btn btn-primary mb-4">Create Announcement</a>
     </div>
 {% endblock %}
 
