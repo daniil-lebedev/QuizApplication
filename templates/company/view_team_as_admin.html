@@ -1,0 +1,88 @@
+{% extends 'base/base.html' %}
+{% block title %} Team Overview {% endblock %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h1>{{ team.name }} - Admin View</h1>
+        <p>{{ team.description }}</p>
+
+        <div class="row">
+            <div class="col-md-6">
+                <h2>Team Statistics</h2>
+                <ul class="list-group">
+                    <li class="list-group-item">Total Members: {{ total_members }}</li>
+                    <li class="list-group-item">Total Quizzes: {{ total_quizzes }}</li>
+                    <li class="list-group-item">Total Boards: {{ total_boards }}</li>
+                    <li class="list-group-item">Total Announcements: {{ total_announcements }}</li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <h2>Members</h2>
+                <ul class="list-group">
+                    {% for member in members %}
+                        <li class="list-group-item">{{ member.user.first_name }} {{ member.user.last_name }}</li>
+                    {% empty %}
+                        <li class="list-group-item">No members found.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <!-- Quizzes Section -->
+        <h2 class="mb-3">Quizzes</h2>
+        <div class="row">
+            {% for quiz in quizzes %}
+                <div class="col-md-4 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ quiz.title }}</h5>
+                            <a href="{% url 'quiz_edit' quiz.id %}" class="btn btn-secondary">Edit Quiz</a>
+                            <a href="{% url 'view_quiz_analysis' quiz.id quiz.belongs_to.id %}"
+                               class="btn btn-success">View Quiz Stats</a>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <p>No quizzes available.</p>
+            {% endfor %}
+        </div>
+        <a href="{% url 'create_quiz' %}" class="btn btn-primary mb-4">Create Quiz</a>
+
+
+        <!-- Educational Boards Section -->
+        <h2 class="mb-3">Educational Boards</h2>
+        <div class="row">
+            {% for board in boards %}
+                <div class="col-md-4 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ board.title }}</h5>
+                            <a href="{% url 'board_detail' board.id %}" class="btn btn-primary">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <p>No boards found.</p>
+            {% endfor %}
+        </div>
+        <a href="{% url 'create_board' %}" class="btn btn-primary mb-4">Create Educational Board</a>
+
+        <!-- Announcements Section -->
+        <h2 class="mb-3">Announcements</h2>
+        <div class="row">
+            {% for announcement in announcements %}
+                <div class="col-md-4 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ announcement.title }}</h5>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <p>No announcements found.</p>
+            {% endfor %}
+        </div>
+        <a href="{% url 'create_announcement' %}" class="btn btn-primary mb-4">Create Announcement</a>
+    </div>
+{% endblock %}
+
