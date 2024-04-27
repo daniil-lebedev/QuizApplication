@@ -1,5 +1,13 @@
 {% extends 'base/base.html' %}
 {% block title %} Team Overview {% endblock %}
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+{% endif %}
 
 {% block content %}
     <div class="container mt-4">
@@ -53,11 +61,14 @@
         <h2 class="mb-3">Educational Boards</h2>
         <div class="row">
             {% for board in boards %}
-                <div class="col-md-4 mb-3">
+                <div class="col-md-5 mb-5">
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">{{ board.title }}</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">Created on:{{ board.date_created }}</h6>
                             <a href="{% url 'board_detail' board.id %}" class="btn btn-primary">View Details</a>
+                            <a href="{% url 'edit_board' board.id %}" class="btn btn-warning">Edit Board</a>
+                            <a href="{% url 'delete_board' board.id team.id %}" class="btn btn-danger">Delete Board</a>
                         </div>
                     </div>
                 </div>
@@ -76,8 +87,10 @@
                         <div class="card-body">
                             <h5 class="card-title">{{ announcement.title }}</h5>
                             <p class="card-text">{{ announcement.content }}</p>
-                            <a href="{% url 'announcement_detail' announcement.id %}" class="btn btn-primary">View Announcement</a>
-                            <a href="{% url 'create_admin_comment' announcement.id %}" class="btn btn-success">Create Admin Comment</a>
+                            <a href="{% url 'announcement_detail' announcement.id %}" class="btn btn-primary">View
+                                Announcement</a>
+                            <a href="{% url 'create_admin_comment' announcement.id %}" class="btn btn-success">Create
+                                Admin Comment</a>
                         </div>
                     </div>
                 </div>

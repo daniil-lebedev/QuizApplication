@@ -14,22 +14,24 @@ from .models import Quiz, Question, Option, Result
 @login_required
 def create_quiz(request):
     if request.method == "POST":
+        # Ensure 'user' is passed as part of kwargs to avoid positional argument conflicts
         form = CreateQuizForm(request.POST, user=request.user)
         if form.is_valid():
             quiz = form.save(commit=False)
-            # Assuming 'belongs_to' is a Team instance
             selected_team = form.cleaned_data.get("belongs_to")
-            # Verify the current user is an admin of the selected team
+            # Check the team admin
             try:
                 team_admin = TeamAdmin.objects.get(team=selected_team, user=request.user)
                 quiz.author = team_admin
-                quiz.belongs_to = selected_team  # Assuming you have a belongs_to field in your Quiz model
+                quiz.belongs_to = selected_team
                 quiz.save()
                 return redirect("quiz_management", quiz_id=quiz.id)
             except TeamAdmin.DoesNotExist:
-                return HttpResponse("You are not an admin of the selected team.", status=403)
+                messages.error(request, "You are not an admin of the selected team.")
+                return render(request, "quiz/create_quiz.html", {"form": form})
     else:
-        form = CreateQuizForm(request.user)
+        # Pass 'user' explicitly as a keyword argument when initializing form for GET request
+        form = CreateQuizForm(user=request.user)
 
     return render(request, "quiz/create_quiz.html", {"form": form})
 
@@ -41,11 +43,11 @@ def take_quiz(request, team_id, quiz_id):
 
     if timezone.now() > quiz.due_date:
         messages.error(request, "This quiz is no longer available.")
-        return redirect('home')  # Adjust as needed
+        return redirect('board_detail', quiz.educational_board.id)
 
     if not Member.objects.filter(team=team, user=request.user).exists():
         messages.error(request, "You are not authorized to take this quiz.")
-        return redirect('user_profile')  # Adjust as needed
+        return redirect('user_profile')
 
     team_member = Member.objects.get(team=team, user=request.user)
 
@@ -87,19 +89,21 @@ def quiz_management(request, quiz_id):
 
 @login_required
 def quiz_edit(request, quiz_id):
-    quiz = get_object_or_404(Quiz, id=quiz_id, belongs_to__admins=request.user)
+    quiz = get_object_or_404(Quiz, id=quiz_id)  # Ensure the quiz exists
     if request.method == 'POST':
-        form = CreateQuizForm(request.POST, instance=quiz)
+        # Ensure 'user' is not in request.POST
+        form_data = request.POST.copy()  # Create a mutable copy
+        form_data.pop('user', None)  # Remove 'user' if exists to prevent conflicts
+
+        form = CreateQuizForm(form_data, instance=quiz, user=request.user)  # Pass user explicitly
         if form.is_valid():
             form.save()
-            # Redirect to the quiz management page or wherever you see fit
-            return redirect('quiz_management', quiz_id=quiz.id)
+            messages.success(request, 'Quiz updated successfully!')
+            return redirect('quiz_detail', quiz_id=quiz.id)  # Redirect to a detailed view or appropriate URL
     else:
-        form = CreateQuizForm(instance=quiz)
+        form = CreateQuizForm(instance=quiz, user=request.user)  # Pass user explicitly for GET request
 
-    quiz.update_points()
-
-    return render(request, 'quiz/quiz_edit.html', {'form': form, 'quiz_id': quiz.id})
+    return render(request, 'quiz/quiz_edit.html', {'form': form, 'quiz': quiz})
 
 
 @login_required
