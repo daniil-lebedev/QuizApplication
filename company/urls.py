@@ -12,4 +12,6 @@ urlpatterns = [
     path("manage_team_view", views.manage_team_view, name="manage_team_view"),
     path("join_team/<int:team_id>", views.join_team, name="join_team"),
     path('team/<int:team_id>/edit/', edit_team, name='edit_team'),
+    path('teams_you_manage', views.show_teams_you_are_admin_of, name='teams_you_manage'),
+    path('view_team_as_admin/<int:team_id>', views.view_team_as_admin, name='view_team_as_admin'),
 ]

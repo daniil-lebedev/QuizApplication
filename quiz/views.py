@@ -14,7 +14,7 @@ from .models import Quiz, Question, Option, Result
 @login_required
 def create_quiz(request):
     if request.method == "POST":
-        form = CreateQuizForm(request.POST)
+        form = CreateQuizForm(request.POST, user=request.user)
         if form.is_valid():
             quiz = form.save(commit=False)
             # Assuming 'belongs_to' is a Team instance
@@ -29,7 +29,7 @@ def create_quiz(request):
             except TeamAdmin.DoesNotExist:
                 return HttpResponse("You are not an admin of the selected team.", status=403)
     else:
-        form = CreateQuizForm()
+        form = CreateQuizForm(request.user)
 
     return render(request, "quiz/create_quiz.html", {"form": form})
 

@@ -1,3 +1,5 @@
+from company.models import Team
+from education_board.models import Board
 from .models import Quiz, Question, Option
 from django import forms
 
@@ -15,10 +17,17 @@ class CreateQuizForm(forms.ModelForm):
             'title': forms.TextInput(attrs={'class': 'form-control'}),
             'description': forms.Textarea(attrs={'class': 'form-control'}),
             'belongs_to': forms.Select(attrs={'class': 'form-control'}),
+            'educational_board': forms.Select(attrs={'class': 'form-control'}),
         }
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, user, *args, **kwargs):
         super(CreateQuizForm, self).__init__(*args, **kwargs)
+        if user:
+            # Filter teams to those where the user is a team admin
+            self.fields['belongs_to'].queryset = Team.objects.filter(team_of_admin__user=user)
+            self.fields['educational_board'].queryset = Board.objects.filter(
+                team__in=Team.objects.filter(team_of_admin__user=user))
+            print(self.fields['educational_board'].queryset)
 
 
 class CreateQuestionForm(forms.ModelForm):

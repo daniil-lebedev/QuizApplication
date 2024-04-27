@@ -43,7 +43,6 @@ def user_profile(request) -> HttpResponse:
     return render(request, "company/profile_page.html", context)
 
 
-
 @login_required
 def create_team(request) -> HttpResponse or redirect:
     """
@@ -115,6 +114,57 @@ def manage_team_view(request) -> render:
         "teams": teams,
     }
     return render(request, "company/manage_team.html", context)
+
+
+@login_required
+def show_teams_you_are_admin_of(request):
+    """
+    View function to show the teams the user is an admin of.
+    :param request: HttpRequest object
+    :return: HttpResponse object with the teams the user is an admin of
+    """
+    # Get all the teams the user is an admin of
+    teams = Team.objects.filter(team_of_admin__user=request.user)
+
+    context = {
+        'teams': teams
+    }
+    return render(request, 'company/show_teams_you_are_admin_of.html', context)
+
+
+@login_required
+def view_team_as_admin(request, team_id):
+    """
+    View function to show the team as an admin with detailed statistics.
+    :param request: HttpRequest object
+    :param team_id: ID of the Team to view
+    :return: HttpResponse object with the team detail view
+    """
+    team = get_object_or_404(Team, id=team_id)
+
+    # Ensure the user is an admin of the team
+    if not team.team_of_admin.filter(user=request.user).exists():
+        messages.error(request, "You are not authorized to view this as admin.")
+        return redirect('unauthorized_access_url')  # Adjust the URL as necessary
+
+    members = team.team_of_member.all()  # Assuming 'members' field or similar relationship
+    quizzes = team.quiz_set.all()
+    boards = team.boards_of_team.all()
+    announcements = team.announcement_set.all()
+
+    context = {
+        'team': team,
+        'members': members,
+        'quizzes': quizzes,
+        'boards': boards,
+        'messages': messages,
+        'announcements': announcements,
+        'total_members': members.count(),
+        'total_quizzes': quizzes.count(),
+        'total_boards': boards.count(),
+        'total_announcements': announcements.count(),
+    }
+    return render(request, 'company/view_team_as_admin.html', context)
 
 
 @login_required
