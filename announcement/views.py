@@ -1,8 +1,9 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import DetailView
 
+from company.models import Team, TeamAdmin
 from .forms import CreateAnnouncementForm, CreateComment, CreateAdminCommentForm
 from .models import Announcement
 
@@ -29,22 +30,28 @@ class AnnouncementDetailView(DetailView):
 
 
 @login_required
-def create_announcement(request) -> render:
-    """
-    Allows a user to create an announcement.
-    :param request:
-    :return:
-    """
-    form = CreateAnnouncementForm()
+def create_announcement(request, team_id):
+    team = get_object_or_404(Team, id=team_id)
+    user = request.user
+
+    # Ensure the user is a TeamAdmin for the specified team
+    team_admin = TeamAdmin.objects.filter(user=user, team=team).first()
+    if not team_admin:
+        messages.error(request, "You are not authorized to create announcements for this team.")
+        return redirect('team_list')  # Redirect to a list of teams or an appropriate error page
+
     if request.method == "POST":
-        form = CreateAnnouncementForm(request.POST)
+        form = CreateAnnouncementForm(request.POST, team=team)
         if form.is_valid():
             announcement = form.save(commit=False)
-            # set the team admin who created the announcement
-            announcement.created_by = request.user.team_admins.first()
-            form.save()
-            # redirect to the announcement detail page
-            return redirect("announcement_detail", pk=form.instance.pk)
+            announcement.team = team
+            announcement.created_by = team_admin
+            announcement.save()
+            messages.success(request, "Announcement created successfully.")
+            return redirect(announcement.get_absolute_url())
+    else:
+        form = CreateAnnouncementForm(team=team)
+
     return render(request, "announcement/create_announcement.html", {"form": form})
 
 
