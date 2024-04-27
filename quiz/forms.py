@@ -20,14 +20,14 @@ class CreateQuizForm(forms.ModelForm):
             'educational_board': forms.Select(attrs={'class': 'form-control'}),
         }
 
-    def __init__(self, user, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)  # Extract user from kwargs to avoid passing it to the superclass
         super(CreateQuizForm, self).__init__(*args, **kwargs)
         if user:
-            # Filter teams to those where the user is a team admin
+            # Set the queryset for 'belongs_to' to only include teams where the user is an admin
             self.fields['belongs_to'].queryset = Team.objects.filter(team_of_admin__user=user)
-            self.fields['educational_board'].queryset = Board.objects.filter(
-                team__in=Team.objects.filter(team_of_admin__user=user))
-            print(self.fields['educational_board'].queryset)
+            # Set the queryset for 'educational_board' to include boards related to teams where the user is an admin
+            self.fields['educational_board'].queryset = Board.objects.filter(team__team_of_admin__user=user)
 
 
 class CreateQuestionForm(forms.ModelForm):

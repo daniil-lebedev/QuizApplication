@@ -9,25 +9,23 @@ class CreateBoardForm(forms.ModelForm):
         fields = ['title', 'description', 'team']
 
     def __init__(self, *args, **kwargs):
-        self.user = kwargs.pop('user', None)  # Get the user from kwargs
+        user = kwargs.pop('user', None)
         super(CreateBoardForm, self).__init__(*args, **kwargs)
-        if self.user is not None:
-            # Filter the teams to only those where the user is a member as a TeamAdmin
-            self.fields['team'].queryset = Team.objects.filter(team_of_admin__user=self.user)
+        if user is not None:
+            self.fields['team'].queryset = Team.objects.filter(team_of_admin__user=user)
+            self.user = user  # Store user for later use in save method
 
     def save(self, commit=True):
         board = super(CreateBoardForm, self).save(commit=False)
-        # Set the created_by to the TeamAdmin record of the current user for the selected team
-        team_admin = TeamAdmin.objects.filter(user=self.user, team=self.cleaned_data['team']).first()
-        if team_admin:
-            board.created_by = team_admin
-        else:
-            # Handle the case where the user is not an admin for the selected team
-            raise forms.ValidationError("You are not an admin for the selected team.")
-
+        if not self.instance.pk:  # Checking if it's a new instance
+            team_admin = TeamAdmin.objects.filter(user=self.user, team=self.cleaned_data['team']).first()
+            if team_admin:
+                board.created_by = team_admin
+            else:
+                raise forms.ValidationError("You are not an admin for the selected team.")
         if commit:
             board.save()
-            self.save_m2m()  # In case there are many-to-many fields that need to be saved
+            self.save_m2m()
         return board
 
 
