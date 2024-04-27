@@ -2,8 +2,51 @@
 {% block title %} {{ announcement.title }} {% endblock %}
 
 {% block content %}
-    <h1>{{ announcement.title }}</h1>
-    <p>{{ announcement.description }}</p>
-    <p>{{ announcement.created_at }}</p>
+    <div class="container mt-5">
+        <h1>{{ announcement.title }}</h1>
+        <p>{{ announcement.description }}</p>
+        <small class="text-muted">Posted on {{ announcement.created_at|date:"N j, Y, P" }}</small>
+
+        <hr>
+        <h3>Member Comments</h3>
+        {% if member_comments %}
+            {% for comment in member_comments %}
+                <div class="card mb-3 border-primary">
+                    <div class="card-body">
+                        <p class="card-text">{{ comment.content }}</p>
+                        <div class="text-muted">
+                            <small>Commented by Member {{ comment.created_by }}
+                                on {{ comment.created_at|date:"N j, Y, P" }}</small>
+                            {% if comment.created_by.user == request.user %}
+                                <a href="{% url 'delete_comment' comment.id %}" class="btn btn-danger btn-sm">Delete</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No member comments yet.</p>
+        {% endif %}
+
+        <h3>Admin Comments</h3>
+        {% if admin_comments %}
+            {% for comment in admin_comments %}
+                <div class="card mb-3 border-danger">
+                    <div class="card-body">
+                        <p class="card-text">{{ comment.content }}</p>
+                        <div class="text-muted">
+                            <small>Commented by Admin {{ comment.created_by }}
+                                on {{ comment.created_at|date:"N j, Y, P" }}</small>
+                             {% if comment.created_by.user == request.user %}
+                                <a href="{% url 'delete_admin_comment' comment.id %}" class="btn btn-danger btn-sm">Delete</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No admin comments yet.</p>
+        {% endif %}
+        <a href="{% url 'create_comment' announcement.id %}" class="btn btn-primary">Add Comment</a>
+    </div>
 {% endblock %}
-```
