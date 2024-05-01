@@ -19,7 +19,7 @@
                 {% endfor %}
             </div>
             {% if quiz %}
-                <a href="{% url 'take_quiz' quiz.id board.team.id %}" class="btn btn-primary mt-3">Take the
+                <a href="{% url 'take_quiz' quiz.belongs_to.id quiz.id %}" class="btn btn-primary mt-3">Take the
                     Quiz</a>
             {% endif %}
         {% else %}

@@ -3,6 +3,14 @@
 {% load crispy_forms_tags %}
 {% block title %}Edit Quiz{% endblock %}
 {% block content %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
 <div class="container my-4">
     <h1>Edit Quiz: {{ form.instance.title }}</h1>
     <form method="post">

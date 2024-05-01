@@ -20,32 +20,42 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'index' %}">Home</a>
+                    <a class="nav-link {% if request.resolver_match.url_name == 'index' %}active{% endif %}"
+                       href="{% url 'index' %}">Home</a>
                 </li>
                 {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'user_profile' %}">Profile</a>
+                        <a class="nav-link {% if request.resolver_match.url_name == 'user_profile' %} active{% endif %}"
+                           href="{% url 'user_profile' %}">Profile
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'show_all_teams' %}">Teams</a>
+                        <a class="nav-link {% if request.resolver_match.url_name == 'show_all_teams' %}active{% endif %}"
+                           href="{% url 'show_all_teams' %}">Teams</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'teams_you_manage' %}">Teams you manage</a>
+                        <a class="nav-link {% if request.resolver_match.url_name == 'teams_you_manage' %}active{% endif %}"
+                           href="{% url 'teams_you_manage' %}">Teams you manage</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'view_all_boards' %}">All Boards</a>
+                        <a class="nav-link {% if request.resolver_match.url_name == 'view_all_boards' %}active{% endif %}"
+                           href="{% url 'view_all_boards' %}">All Boards</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'view_all_announcements' %}">All Announcements</a>
+                        <a class="nav-link {% if request.resolver_match.url_name == 'view_all_announcements' %}active{% endif %}"
+                           href="{% url 'view_all_announcements' %}">All Announcements</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'show_all_quizzes' %}">View Your Quizzes</a>
+                        <a class="nav-link {% if request.resolver_match.url_name == 'view_all_quizzes' %}active{% endif %}"
+                           href="{% url 'show_all_quizzes' %}">View Your Quizzes</a>
                         {% else %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'register_user' %}">Register</a>
+                        <a class="nav-link {% if request.resolver_match.url_name == 'register_user' %}active{% endif %}"
+                           href="{% url 'register_user' %}">Register</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'login_user' %}">Login</a>
+                        <a class="nav-link {% if request.resolver_match.url_name == 'login_user' %}active{% endif %}"
+                           href="{% url 'login_user' %}">Login</a>
                     </li>
                 {% endif %}
             </ul>

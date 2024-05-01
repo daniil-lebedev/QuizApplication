@@ -61,7 +61,7 @@
         <h2 class="mb-3">Educational Boards</h2>
         <div class="row">
             {% for board in boards %}
-                <div class="col-md-5 mb-5">
+                <div class="col-md-6 mb-6">
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">{{ board.title }}</h5>
@@ -69,6 +69,7 @@
                             <a href="{% url 'board_detail' board.id %}" class="btn btn-primary">View Details</a>
                             <a href="{% url 'edit_board' board.id %}" class="btn btn-warning">Edit Board</a>
                             <a href="{% url 'delete_board' board.id team.id %}" class="btn btn-danger">Delete Board</a>
+                            <a href="{% url 'create_slide' board.id %}" class="btn btn-success">Create Slide</a>
                         </div>
                     </div>
                 </div>
@@ -76,13 +77,14 @@
                 <p>No boards found.</p>
             {% endfor %}
         </div>
+        <br>
         <a href="{% url 'create_board' %}" class="btn btn-primary mb-4">Create Educational Board</a>
 
         <!-- Announcements Section -->
         <h2 class="mb-3">Announcements</h2>
         <div class="row">
             {% for announcement in announcements %}
-                <div class="col-md-4 mb-4">
+                <div class="col-md-5 mb-5">
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">{{ announcement.title }}</h5>

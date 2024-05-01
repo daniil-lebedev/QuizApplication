@@ -2,6 +2,14 @@
 {% load crispy_forms_filters %}
 {% block title %} Create option {% endblock %}
 {% block content %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
 <div class="container">
     <h2>Add New Option for "{{ question.question }}"</h2>
     <form method="post">

@@ -1,30 +1,40 @@
 {% extends 'base/base.html' %}
 {% block title %}All Educational Boards{% endblock %}
 {% block content %}
-<div class="container mt-5">
-    <h1 class="text-center mb-4">All Educational Boards</h1>
-    <hr>
-    {% if boards %}
-    <div class="row">
-        {% for board in boards %}
-        <div class="col-md-4 mb-4">
-            <div class="card h-100">
-                <div class="card-body">
-                    <h5 class="card-title text-center">{{ board.title }}</h5>
-                    <p class="card-text">{{ board.description|truncatechars:150 }}</p>
-                </div>
-                <div class="card-footer">
-                    <a href="{% url 'create_slide' board_id=board.id %}" class="btn btn-primary">Create Slide</a>
-                    <a href="{% url 'board_detail' board_id=board.id %}" class="btn btn-secondary">View Details</a>
-                </div>
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
-        </div>
         {% endfor %}
-    </div>
-    {% else %}
-    <div class="alert alert-info" role="alert">
-        No educational boards available yet. Start by creating one!
-    </div>
     {% endif %}
-</div>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">All Educational Boards</h1>
+        <hr>
+        {% if boards %}
+            <div class="row">
+                {% for board in boards %}
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title text-center">{{ board.title }}</h5>
+                                <p class="card-text">{{ board.description|truncatechars:150 }}</p>
+                            </div>
+                            <div class="card-footer">
+                                <a href="{% url 'create_slide' board_id=board.id %}" class="btn btn-primary">Create
+                                    Slide</a>
+                                <a href="{% url 'board_detail' board_id=board.id %}" class="btn btn-secondary">View
+                                    Details</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="alert alert-info" role="alert">
+                No educational boards available yet. Start by creating one!
+            </div>
+        {% endif %}
+    </div>
 {% endblock %}

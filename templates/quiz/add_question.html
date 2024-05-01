@@ -4,6 +4,14 @@
 {% block title %}Create a Question{% endblock %}
 
 {% block content %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
 <div class="container mt-5">
     <h1 class="mb-3">Create a Question</h1>
     <div class="card">

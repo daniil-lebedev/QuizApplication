@@ -3,48 +3,58 @@
 {% block title %}Manage Quiz: {{ quiz.title }}{% endblock %}
 
 {% block content %}
-<div class="container my-4">
-    <h1 class="display-4">Manage Quiz: {{ quiz.title }}</h1>
-    <div class="card shadow-sm mb-4">
-        <div class="card-body">
-            <h2 class="h4 card-title">{{ quiz.title }}</h2>
-            <p class="card-text">{{ quiz.description }}</p>
-            <p class="card-text">Due date: <strong>{{ quiz.due_date|date:"F d, Y" }}</strong></p>
-            <p class="card-text">Total Points: <strong>{{ quiz.points }}</strong></p>
-            <a href="{% url 'quiz_edit' quiz.id %}" class="btn btn-warning">Edit Quiz</a>
-        </div>
-    </div>
-
-    <h2>Questions</h2>
-    {% if questions %}
-        {% for question in questions %}
-        <div class="card shadow-sm mb-3">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+    <div class="container my-4">
+        <h1 class="display-4">Manage Quiz: {{ quiz.title }}</h1>
+        <div class="card shadow-sm mb-4">
             <div class="card-body">
-                <h5 class="card-title">{{ question.question }}</h5>
-                <p class="card-text">Points: {{ question.point }}</p>
-                <a href="{% url 'edit_question' quiz.id question.id %}" class="btn btn-warning">Edit Question</a>
-                <a href="{% url 'create_option' quiz.id question.id %}" class="btn btn-success">Add Option</a>
-
-                {% if question.option_set.all %}
-                <div class="mt-3">
-                    <h6>Options:</h6>
-                    {% for option in question.option_set.all %}
-                    <div class="card bg-light mb-2">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ option.option }}</h5>
-                            <p class="card-text">Correct: {{ option.is_correct|yesno:"Yes,No" }}</p>
-                            <a href="{% url 'edit_option' quiz.id question.id option.id %}" class="btn btn-warning">Edit Option</a>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-                {% endif %}
+                <h2 class="h4 card-title">{{ quiz.title }}</h2>
+                <p class="card-text">{{ quiz.description }}</p>
+                <p class="card-text">Due date: <strong>{{ quiz.due_date|date:"F d, Y" }}</strong></p>
+                <p class="card-text">Total Points: <strong>{{ quiz.points }}</strong></p>
+                <a href="{% url 'quiz_edit' quiz.id %}" class="btn btn-warning">Edit Quiz</a>
             </div>
         </div>
-        {% endfor %}
-    {% else %}
-        <p>No questions added yet. Click below to add one.</p>
-    {% endif %}
-    <a href="{% url 'add_question' quiz.id %}" class="btn btn-success mt-3">Add New Question</a>
-</div>
+
+        <h2>Questions</h2>
+        {% if questions %}
+            {% for question in questions %}
+                <div class="card shadow-sm mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ question.question }}</h5>
+                        <p class="card-text">Points: {{ question.point }}</p>
+                        <a href="{% url 'edit_question' quiz.id question.id %}" class="btn btn-warning">Edit
+                            Question</a>
+                        <a href="{% url 'create_option' quiz.id question.id %}" class="btn btn-success">Add Option</a>
+
+                        {% if question.option_set.all %}
+                            <div class="mt-3">
+                                <h6>Options:</h6>
+                                {% for option in question.option_set.all %}
+                                    <div class="card bg-light mb-2">
+                                        <div class="card-body">
+                                            <h5 class="card-title">{{ option.option }}</h5>
+                                            <p class="card-text">Correct: {{ option.is_correct|yesno:"Yes,No" }}</p>
+                                            <a href="{% url 'edit_option' quiz.id question.id option.id %}"
+                                               class="btn btn-warning">Edit Option</a>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No questions added yet. Click below to add one.</p>
+        {% endif %}
+        <a href="{% url 'add_question' quiz.id %}" class="btn btn-success mt-3">Add New Question</a>
+    </div>
 {% endblock %}

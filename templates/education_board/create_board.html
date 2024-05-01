@@ -2,6 +2,14 @@
 {% load crispy_forms_filters %}
 {% block title %} Create Board {% endblock %}
 {% block content %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
     <div class="container">
         <h1>Create Board</h1>
         <form method="POST">

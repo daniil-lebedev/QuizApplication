@@ -10,9 +10,18 @@ from company.models import TeamAdmin, Member, Team
 from .forms import CreateQuizForm, CreateQuestionForm, CreateOptionForm
 from .models import Quiz, Question, Option, Result
 
+from django.shortcuts import render, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from .models import Quiz, Team, Result, Member
+from django.db.models import Avg
+
 
 @login_required
 def create_quiz(request):
+    # make sure the user is an admin
+    if not TeamAdmin.objects.filter(user=request.user).exists():
+        messages.error(request, "You are not authorized to create a quiz.")
+        return redirect('user_profile')
     if request.method == "POST":
         # Ensure 'user' is passed as part of kwargs to avoid positional argument conflicts
         form = CreateQuizForm(request.POST, user=request.user)
@@ -28,7 +37,7 @@ def create_quiz(request):
                 return redirect("quiz_management", quiz_id=quiz.id)
             except TeamAdmin.DoesNotExist:
                 messages.error(request, "You are not an admin of the selected team.")
-                return render(request, "quiz/create_quiz.html", {"form": form})
+                return redirect("create_quiz")
     else:
         # Pass 'user' explicitly as a keyword argument when initializing form for GET request
         form = CreateQuizForm(user=request.user)
@@ -215,12 +224,6 @@ def view_result(request, quiz_id, team_id):
         'member': member
     }
     return render(request, 'quiz/view_result.html', context)
-
-
-from django.shortcuts import render, get_object_or_404
-from django.contrib.auth.decorators import login_required
-from .models import Quiz, Team, Result, Member
-from django.db.models import Avg
 
 
 @login_required
