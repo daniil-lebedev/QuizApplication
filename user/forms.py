@@ -1,5 +1,5 @@
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-
+from django.contrib.auth.forms import UserCreationForm
+from sensitivity_check.check_sensitivity import is_offensive
 from .models import AbstractUser
 from django import forms
 
@@ -22,6 +22,49 @@ class RegisterAbstractUserForm(UserCreationForm):
     class Meta:
         model = AbstractUser
         fields = ["email", "first_name", "last_name", "email", "password1", "password2"]
+
+    def clean_first_name(self) -> str or None:
+        """
+        Check if the first name is offensive.
+        :return: the first name or None if the first name is offensive
+        """
+        first_name = self.cleaned_data.get('first_name')
+        if is_offensive(first_name):
+            raise forms.ValidationError("The first name is offensive.")
+        return first_name
+
+    def clean_last_name(self) -> str or None:
+        """
+        Check if the last name is offensive.
+        :return: the last name or None if the last name is offensive
+        """
+        last_name = self.cleaned_data.get('last_name')
+        if is_offensive(last_name):
+            raise forms.ValidationError("The last name is offensive.")
+        return last_name
+
+    def clean_email(self) -> str or None:
+        """
+        Check if the email is offensive.
+        :return: the email or None if the email is offensive
+        """
+        email = self.cleaned_data.get('email')
+        if is_offensive(email):
+            raise forms.ValidationError("The email is offensive.")
+        return email
+
+    def __init__(self, *args, **kwargs):
+        """
+        Add warning message to the form.
+        :param args:
+        :param kwargs:
+        """
+        super(RegisterAbstractUserForm, self).__init__(*args, **kwargs)
+        self.fields['first_name'].widget.attrs.update({'class': 'form-control'})
+        self.fields['last_name'].widget.attrs.update({'class': 'form-control'})
+        self.fields['email'].widget.attrs.update({'class': 'form-control'})
+        self.fields['password1'].widget.attrs.update({'class': 'form-control'})
+        self.fields['password2'].widget.attrs.update({'class': 'form-control'})
 
 
 class LoginForm(forms.Form):

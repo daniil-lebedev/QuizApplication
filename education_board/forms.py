@@ -1,12 +1,33 @@
 from company.models import Team, TeamAdmin
 from .models import Board, Slide
 from django import forms
+from sensitivity_check.check_sensitivity import is_offensive
 
 
 class CreateBoardForm(forms.ModelForm):
     class Meta:
         model = Board
         fields = ['title', 'description', 'team']
+
+    def clean_title(self) -> str:
+        """
+        Check if the title contains offensive words
+        :return: title of the board
+        """
+        title = self.cleaned_data['title']
+        if is_offensive(title):
+            raise forms.ValidationError("Title contains offensive words.")
+        return title
+
+    def clean_description(self) -> str:
+        """
+        Check if the description contains offensive words
+        :return: description of the board
+        """
+        description = self.cleaned_data['description']
+        if is_offensive(description):
+            raise forms.ValidationError("Description contains offensive words.")
+        return description
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
@@ -32,7 +53,27 @@ class CreateBoardForm(forms.ModelForm):
 class CreateSlideForm(forms.ModelForm):
     class Meta:
         model = Slide
-        fields = ['title', 'description']  # Update this if you decide to include 'image' in the future
+        fields = ['title', 'description']
+
+    def clean_title(self) -> str:
+        """
+        Check if the title contains offensive words
+        :return: title of the slide
+        """
+        title = self.cleaned_data['title']
+        if is_offensive(title):
+            raise forms.ValidationError("Title contains offensive words.")
+        return title
+
+    def clean_description(self) -> str:
+        """
+        Check if the description contains offensive words
+        :return: description of the slide
+        """
+        description = self.cleaned_data['description']
+        if is_offensive(description):
+            raise forms.ValidationError("Description contains offensive words.")
+        return description
 
     def __init__(self, *args, **kwargs):
         self.board_id = kwargs.pop('board_id', None)  # Extract the board_id from kwargs
