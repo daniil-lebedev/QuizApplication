@@ -1,14 +1,34 @@
 from company.models import TeamAdmin
 from quiz.models import Quiz
 from .models import Announcement, AdminComment, Comment
-
+from sensitivity_check.check_sensitivity import is_offensive
 from django import forms
 
 
 class CreateAnnouncementForm(forms.ModelForm):
     class Meta:
         model = Announcement
-        fields = ['title', 'description', 'quiz']  # Exclude 'team' and 'created_by' from the form fields
+        fields = ['title', 'description', 'quiz']
+
+    def clean_title(self) -> str:
+        """
+        Check if the title contains offensive content.
+        :return: title of the announcement
+        """
+        title = self.cleaned_data['title']
+        if is_offensive(title):
+            raise forms.ValidationError("Title contains offensive content.")
+        return title
+
+    def clean_description(self) -> str:
+        """
+        Check if the description contains offensive content.
+        :return: description of the announcement
+        """
+        description = self.cleaned_data['description']
+        if is_offensive(description):
+            raise forms.ValidationError("Description contains offensive content.")
+        return description
 
     def __init__(self, *args, team=None, **kwargs):
         super(CreateAnnouncementForm, self).__init__(*args, **kwargs)
@@ -36,6 +56,20 @@ class CreateAdminCommentForm(forms.ModelForm):
             'content': forms.Textarea(attrs={'class': 'form-control'}),
         }
 
+    def clean_content(self):
+        """
+        Check if the content contains offensive content.
+        :return: content of the admin comment
+        """
+        content = self.cleaned_data['content']
+        if is_offensive(content):
+            raise forms.ValidationError("Content contains offensive content.")
+        return content
+
+    def __init__(self, *args, **kwargs):
+        super(CreateAdminCommentForm, self).__init__(*args, **kwargs)
+        self.fields['content'].label = "Comment"
+
 
 class CreateComment(forms.ModelForm):
     """
@@ -48,3 +82,18 @@ class CreateComment(forms.ModelForm):
         widgets = {
             'content': forms.Textarea(attrs={'class': 'form-control'}),
         }
+
+    def clean_content(self):
+        """
+        Check if the content contains offensive content.
+        :return: content of the comment
+        """
+        content = self.cleaned_data['content']
+        if is_offensive(content):
+            raise forms.ValidationError("Content contains offensive content.")
+        return content
+
+    def __init__(self, *args, **kwargs):
+        super(CreateComment, self).__init__(*args, **kwargs)
+        self.fields['content'].label = "Comment"
+        self.fields['content'].widget.attrs['placeholder'] = "Write a comment..."

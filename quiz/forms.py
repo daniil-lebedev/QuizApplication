@@ -2,6 +2,7 @@ from company.models import Team
 from education_board.models import Board
 from .models import Quiz, Question, Option
 from django import forms
+from sensitivity_check.check_sensitivity import is_offensive
 
 
 class CreateQuizForm(forms.ModelForm):
@@ -19,6 +20,26 @@ class CreateQuizForm(forms.ModelForm):
             'belongs_to': forms.Select(attrs={'class': 'form-control'}),
             'educational_board': forms.Select(attrs={'class': 'form-control'}),
         }
+
+    def clean_title(self) -> str:
+        """
+        This function checks if the title contains any offensive words.
+        :return: title of the quiz
+        """
+        title = self.cleaned_data.get('title')
+        if is_offensive(title):
+            raise forms.ValidationError("Title contains offensive words")
+        return title
+
+    def clean_description(self) -> str:
+        """
+        This function checks if the description contains any offensive words.
+        :return: description of the quiz
+        """
+        description = self.cleaned_data.get('description')
+        if is_offensive(description):
+            raise forms.ValidationError("Description contains offensive words")
+        return description
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)  # Extract user from kwargs to avoid passing it to the superclass
