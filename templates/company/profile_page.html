@@ -2,106 +2,78 @@
 {% block title %} User Profile {% endblock %}
 
 {% block content %}
-    {% if messages %}
-        {% for message in messages %}
-            <div class="alert alert-{{ message.tags }}" role="alert">
-                {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        {% endfor %}
-    {% endif %}
     <div class="container mt-4">
         <h1 class="display-4">Hello, {{ user.first_name }} {{ user.last_name }}</h1>
 
-        <h3>Quizzes Created by You</h3>
-        <div class="row">
-            {% for quiz in quizzes %}
-                <div class="col-md-6 mb-6">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ quiz.title }}</h5>
-                            <p class="card-text">{{ quiz.description|truncatewords:20 }}</p>
-                            <p class="text-muted">Due: {{ quiz.due_date|date:"F d, Y" }}</p>
-                            <a href="{% url 'view_quiz' quiz.id %}" class="btn btn-primary">View Quiz</a>
-                            <a href="{% url 'view_quiz_analysis' quiz.id quiz.belongs_to.id %}" class="btn btn-primary">View
-                                Quiz Results</a>
-                            <a href="{% url 'quiz_management' quiz.id %}" class="btn btn-secondary">Manage Quiz</a>
-                        </div>
-                    </div>
-                </div>
-            {% empty %}
-                <p>No quizzes found.</p>
-            {% endfor %}
-        </div>
-
-        <h3>Teams You Are an Admin Of</h3>
-        <div class="row">
-            {% for team_admin in user.team_admins.all %}
-                <div class="col-md-4 mb-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ team_admin.name }}</h5>
-                            <p class="card-text">{{ team_admin.description|truncatewords:20 }}</p>
-                            <a href="{% url 'edit_team' team_admin.id %}" class="btn btn-primary">Edit Team</a>
-                            <a href="{% url 'team_detail' team_admin.id %}" class="btn btn-info">View Team</a>
-                        </div>
-                    </div>
-                </div>
-            {% empty %}
-                <p>No teams to manage.</p>
-            {% endfor %}
-        </div>
-
-        <h3>Teams You Are a Member Of</h3>
-        <div class="row">
-            {% for team_member in user_teams_member_of %}
-                <div class="col-md-4 mb-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ team_member.name }}</h5>
-                            <p class="card-text">Created at: {{ team_member.created_at|date:"F d, Y" }}</p>
-                            <a href="{% url 'team_detail' team_member.id %}" class="btn btn-info">View Team</a>
-                        </div>
-                    </div>
-                </div>
-            {% empty %}
-                <p>You are not a member of any teams.</p>
-            {% endfor %}
-        </div>
-
-        <h3>Boards You Have Created</h3>
+        <h3>Recent Educational Boards</h3>
         <div class="row">
             {% for board in boards %}
-                <div class="col-md-4 mb-4">
-                    <div class="card">
+                <div class="col-md-3 mb-3">
+                    <div class="card h-100">
                         <div class="card-body">
                             <h5 class="card-title">{{ board.title }}</h5>
+                            <p class="card-text">Created on: {{ board.date_created|date:"F d, Y" }}</p>
                             <p class="card-text">{{ board.description|truncatewords:20 }}</p>
                             <a href="{% url 'board_detail' board.id %}" class="btn btn-success">View Board</a>
                         </div>
                     </div>
                 </div>
             {% empty %}
-                <p>No educational boards found.</p>
+                <p>No recent educational boards found.</p>
             {% endfor %}
         </div>
 
-        <h3>Your Results</h3>
+        <h3>Recent Quizzes</h3>
         <div class="row">
-            {% for result in results %}
-                <div class="col-md-4 mb-4">
-                    <div class="card">
+            {% for quiz in quizzes %}
+                <div class="col-md-3 mb-3">
+                    <div class="card h-100">
                         <div class="card-body">
-                            <h5 class="card-title">{{ result.quiz.title }}</h5>
-                            <p class="card-text">Score: {{ result.score }}/{{ result.quiz.points }}</p>
-                            <p class="text-muted">Completed: {{ result.date_taken|date:"F d, Y H:i" }}</p>
-                            <a href="{% url 'view_result' result.quiz_id result.user.team.id %}"
-                               class="btn btn-primary">View Result</a>
+                            <h5 class="card-title">{{ quiz.title }}</h5>
+                            <p class="card-text">Due date: {{ quiz.due_date|date:"F d, Y" }}</p>
+                            <p class="card-text">Points: {{ quiz.points }}</p>
+                            <p class="card-text">{{ quiz.description|truncatewords:20 }}</p>
+                            <a href="{% url 'take_quiz' quiz.belongs_to.id quiz.id %}" class="btn btn-primary">Take Quiz</a>
                         </div>
                     </div>
                 </div>
             {% empty %}
-                <p>No quiz results to show.</p>
+                <p>No recent quizzes available.</p>
+            {% endfor %}
+        </div>
+
+        <h3>Recent Quiz Results</h3>
+        <div class="row">
+            {% for result in results %}
+                <div class="col-md-3 mb-3">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ result.quiz.title }}</h5>
+                            <p class="card-text">Score: {{ result.score }}/{{ result.quiz.points }}</p>
+                            <p class="text-muted">Completed: {{ result.date_taken|date:"F d, Y H:i" }}</p>
+                            <a href="{% url 'view_result' result.quiz.id result.quiz.belongs_to.id %}" class="btn btn-success">View Result</a>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <p>No recent quiz results to show.</p>
+            {% endfor %}
+        </div>
+
+        <h3>Teams You Are a Member Of</h3>
+        <div class="row">
+            {% for team in user_teams_member_of %}
+                <div class="col-md-3 mb-3">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ team.name }}</h5>
+                            <p class="card-text">Joined on: {{ team.created_at|date:"F d, Y" }}</p>
+                            <a href="{% url 'team_detail' team.id %}" class="btn btn-success">View Team</a>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <p>You are not a member of any teams.</p>
             {% endfor %}
         </div>
 

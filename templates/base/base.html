@@ -43,11 +43,9 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {% if request.resolver_match.url_name == 'view_all_announcements' %}active{% endif %}"
-                           href="{% url 'view_all_announcements' %}">All Announcements</a>
+                           href="{% url 'view_all_announcements' %}">Announcements for you</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {% if request.resolver_match.url_name == 'view_all_quizzes' %}active{% endif %}"
-                           href="{% url 'show_all_quizzes' %}">View Your Quizzes</a>
                         {% else %}
                     <li class="nav-item">
                         <a class="nav-link {% if request.resolver_match.url_name == 'register_user' %}active{% endif %}"

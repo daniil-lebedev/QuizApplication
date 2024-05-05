@@ -57,7 +57,8 @@ def view_all_announcements(request) -> render:
     :param request:
     :return:
     """
-    announcements = Announcement.objects.all()
+    # get all announcements from teams that user is a member of
+    announcements = Announcement.objects.filter(team__team_of_member__user=request.user).order_by('-created_at')
     return render(request, "announcement/view_all_announcements.html", {"announcements": announcements})
 
 

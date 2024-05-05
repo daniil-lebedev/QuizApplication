@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
@@ -18,20 +20,20 @@ def user_profile(request) -> HttpResponse:
     :param request: request for the page
     :return: response for the page
     """
-    # Get the teams where the user is an admin
-    user_teams = Team.objects.filter(team_of_admin__user=request.user).distinct()
 
     # get teams where the user is a member
     user_teams_member_of = Team.objects.filter(team_of_member__user=request.user).distinct()
 
-    # Filter quizzes that belong to any of the teams the user administers
-    quizzes = Quiz.objects.filter(belongs_to__in=user_teams).distinct()
+    # Get the 4 most recent quizzes that were assigned for the user
+    # as member and ensure that the deadline has not passed
+    quizzes = Quiz.objects.filter(belongs_to__in=user_teams_member_of,
+                                  due_date__gte=datetime.now(timezone.utc)).distinct().reverse()[0:4]
 
     # Fileter results that belong to any of the teams the user administers
     results = Result.objects.filter(user__user=request.user).distinct()
 
     # get all the boards for the user
-    boards = Board.objects.filter(team__in=user_teams).distinct()
+    boards = Board.objects.filter(team__in=user_teams_member_of).distinct()[0:4]
 
     context = {
         "quizzes": quizzes,

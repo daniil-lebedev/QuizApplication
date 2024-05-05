@@ -1,8 +1,10 @@
 import nltk
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
+from better_profanity import profanity as bp
 
 # Download the VADER lexicon
 nltk.download('vader_lexicon')
+
 # Initialize the VADER sentiment analyzer
 sia = SentimentIntensityAnalyzer()
 
@@ -17,14 +19,26 @@ def analyze_text(text: str) -> dict:
     return scores
 
 
-def is_offensive(text: str, threshold=-0.5) -> tuple:
+def contains_offensive_keywords(text: str) -> bool:
     """
-    Check if a text is offensive based on the compound sentiment score.
+    Check if text contains offensive keywords.
+    """
+    return bp.contains_profanity(text)
+
+
+def is_offensive(text: str) -> dict:
+    """
+    Determine if text is offensive by combining keyword analysis and sentiment analysis.
     :param text: the text to analyze
-    :param threshold: the threshold for the compound score
-    :return: a tuple containing a boolean indicating if the text is offensive and the sentiment scores
+    :return: a dictionary containing the result of the analysis
     """
     scores = analyze_text(text)
-    if scores['compound'] <= threshold:
-        return True, scores
-    return False, scores
+    print(scores)
+    # Check for offensive keywords first
+    if contains_offensive_keywords(text):
+        return {'is_offensive': True, 'scores': scores, 'reason': bp.censor(text)}
+
+    # if combined value of neutral and positive is greater than negative, then it is not offensive
+    if sum([scores['neu'], scores['pos']]) > scores['neg']:
+        print("Not offensive")
+        return {'is_offensive': False, 'scores': scores, 'reason': None}

@@ -16,8 +16,9 @@ class CreateAnnouncementForm(forms.ModelForm):
         :return: title of the announcement
         """
         title = self.cleaned_data['title']
-        if is_offensive(title):
-            raise forms.ValidationError("Title contains offensive content.")
+        analyzed_text = is_offensive(title)
+        if analyzed_text['is_offensive']:
+            raise forms.ValidationError("Content contains offensive content. Reason: " + analyzed_text['reason'])
         return title
 
     def clean_description(self) -> str:
@@ -26,8 +27,9 @@ class CreateAnnouncementForm(forms.ModelForm):
         :return: description of the announcement
         """
         description = self.cleaned_data['description']
-        if is_offensive(description):
-            raise forms.ValidationError("Description contains offensive content.")
+        analyzed_text = is_offensive(description)
+        if analyzed_text['is_offensive']:
+            raise forms.ValidationError("Content contains offensive content. Reason: " + analyzed_text['reason'])
         return description
 
     def __init__(self, *args, team=None, **kwargs):
@@ -62,8 +64,9 @@ class CreateAdminCommentForm(forms.ModelForm):
         :return: content of the admin comment
         """
         content = self.cleaned_data['content']
-        if is_offensive(content):
-            raise forms.ValidationError("Content contains offensive content.")
+        analyzed_text = is_offensive(content)
+        if analyzed_text['is_offensive']:
+            raise forms.ValidationError("Content contains offensive content. Reason: " + analyzed_text['reason'])
         return content
 
     def __init__(self, *args, **kwargs):
@@ -89,8 +92,9 @@ class CreateComment(forms.ModelForm):
         :return: content of the comment
         """
         content = self.cleaned_data['content']
-        if is_offensive(content):
-            raise forms.ValidationError("Content contains offensive content.")
+        analyzed_text = is_offensive(content)
+        if analyzed_text['is_offensive']:
+            raise forms.ValidationError("Content contains offensive content. Reason: " + analyzed_text['reason'])
         return content
 
     def __init__(self, *args, **kwargs):
