@@ -15,8 +15,9 @@ class CreateBoardForm(forms.ModelForm):
         :return: title of the board
         """
         title = self.cleaned_data['title']
-        if is_offensive(title):
-            raise forms.ValidationError("Title contains offensive words.")
+        analyzed_text = is_offensive(title)
+        if analyzed_text['is_offensive']:
+            raise forms.ValidationError("Content contains offensive content. Reason: " + analyzed_text['reason'])
         return title
 
     def clean_description(self) -> str:
@@ -25,8 +26,9 @@ class CreateBoardForm(forms.ModelForm):
         :return: description of the board
         """
         description = self.cleaned_data['description']
-        if is_offensive(description):
-            raise forms.ValidationError("Description contains offensive words.")
+        analyzed_text = is_offensive(description)
+        if analyzed_text['is_offensive']:
+            raise forms.ValidationError("Content contains offensive content. Reason: " + analyzed_text['reason'])
         return description
 
     def __init__(self, *args, **kwargs):
@@ -61,8 +63,9 @@ class CreateSlideForm(forms.ModelForm):
         :return: title of the slide
         """
         title = self.cleaned_data['title']
-        if is_offensive(title):
-            raise forms.ValidationError("Title contains offensive words.")
+        analyzed_text = is_offensive(title)
+        if analyzed_text['is_offensive']:
+            raise forms.ValidationError("Content contains offensive content. Reason: " + analyzed_text['reason'])
         return title
 
     def clean_description(self) -> str:
@@ -71,8 +74,9 @@ class CreateSlideForm(forms.ModelForm):
         :return: description of the slide
         """
         description = self.cleaned_data['description']
-        if is_offensive(description):
-            raise forms.ValidationError("Description contains offensive words.")
+        analyzed_text = is_offensive(description)
+        if analyzed_text['is_offensive']:
+            raise forms.ValidationError("Content contains offensive content. Reason: " + analyzed_text['reason'])
         return description
 
     def __init__(self, *args, **kwargs):

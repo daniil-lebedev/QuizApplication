@@ -185,15 +185,32 @@ def edit_option(request, quiz_id, question_id, option_id):
 
 
 @login_required
-def show_all_quizzes(request):
-    quizzes = Quiz.objects.filter(belongs_to__admins=request.user)
-    return render(request, 'quiz/show_all_quizzes.html', {'quizzes': quizzes})
-
-
-@login_required
 def view_quiz(request, quiz_id):
     quiz = get_object_or_404(Quiz, id=quiz_id, belongs_to__admins=request.user)
     return render(request, 'quiz/view_quiz.html', {'quiz': quiz})
+
+
+@login_required
+def delete_quiz(request, quiz_id: int) -> redirect:
+    """
+    Delete a quiz.
+    :param request: request for the page
+    :param quiz_id: the id of the quiz to delete
+    :return: redirect to the user profile page
+    """
+    quiz = get_object_or_404(Quiz, id=quiz_id)
+    if quiz.belongs_to.admins.filter(id=request.user.id).exists():
+        # Confirm deletion
+        if request.method == "POST":
+            quiz.delete()
+            messages.success(request, "Quiz successfully deleted.")
+            return redirect('user_profile')
+        else:
+            # Show confirmation page before deleting
+            return render(request, 'quiz/confirm_delete.html', {'quiz': quiz})
+    else:
+        messages.error(request, "You do not have permission to delete this quiz.")
+        return redirect('user_profile')
 
 
 @login_required

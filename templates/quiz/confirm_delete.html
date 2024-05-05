@@ -1,0 +1,24 @@
+{% extends 'base/base.html' %}
+{% block title %} Confirm Delete Quiz {% endblock %}
+
+{% block content %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+<div class="container mt-5">
+    <h1>Delete Quiz</h1>
+    <p>Are you sure you want to delete this quiz?</p>
+    <form method="post">
+        {% csrf_token %}
+        <div class="btn-group">
+            <button type="submit" class="btn btn-danger">Yes, delete it</button>
+            <a href="{% url 'view_team_as_admin' quiz.belongs_to.id  %}" class="btn btn-secondary">No, take me back</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

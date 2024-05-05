@@ -18,8 +18,9 @@ class RegisterTeamForm(forms.ModelForm):
         :return: the team name or None if the team name is offensive
         """
         name = self.cleaned_data.get('name')
-        if is_offensive(name):
-            raise forms.ValidationError("The team name is offensive.")
+        analyzed_text = is_offensive(name)
+        if analyzed_text['is_offensive']:
+            raise forms.ValidationError("Content contains offensive content. Reason: " + analyzed_text['reason'])
         return name
 
     def clean_description(self) -> str or None:
@@ -28,8 +29,9 @@ class RegisterTeamForm(forms.ModelForm):
         :return: the team description or None if the team description is offensive
         """
         description = self.cleaned_data.get('description')
-        if is_offensive(description):
-            raise forms.ValidationError("The team description is offensive.")
+        analyzed_text = is_offensive(description)
+        if analyzed_text['is_offensive']:
+            raise forms.ValidationError("Content contains offensive content. Reason: " + analyzed_text['reason'])
         return description
 
     def clean_email(self) -> str or None:
@@ -38,8 +40,9 @@ class RegisterTeamForm(forms.ModelForm):
         :return: the team email or None if the team email is offensive
         """
         email = self.cleaned_data.get('email')
-        if is_offensive(email):
-            raise forms.ValidationError("The team email is offensive.")
+        analyzed_text = is_offensive(email)
+        if analyzed_text['is_offensive']:
+            raise forms.ValidationError("Content contains offensive content. Reason: " + analyzed_text['reason'])
         return email
 
     def __init__(self, *args, **kwargs):

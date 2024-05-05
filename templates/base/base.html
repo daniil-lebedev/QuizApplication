@@ -43,11 +43,9 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {% if request.resolver_match.url_name == 'view_all_announcements' %}active{% endif %}"
-                           href="{% url 'view_all_announcements' %}">All Announcements</a>
+                           href="{% url 'view_all_announcements' %}">Announcements for you</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {% if request.resolver_match.url_name == 'view_all_quizzes' %}active{% endif %}"
-                           href="{% url 'show_all_quizzes' %}">View Your Quizzes</a>
                         {% else %}
                     <li class="nav-item">
                         <a class="nav-link {% if request.resolver_match.url_name == 'register_user' %}active{% endif %}"
@@ -65,12 +63,18 @@
 
 {% block content %}
     {% if messages %}
-        {% for message in messages %}
-            <div class="alert alert-{{ message.tags }}" role="alert">
-                {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        <div class="container mt-5">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tag }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                </div>
             </div>
-        {% endfor %}
+        </div>
     {% endif %}
     {% block body %}{% endblock %}
 {% endblock %}

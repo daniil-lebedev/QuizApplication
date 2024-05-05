@@ -29,8 +29,9 @@ class RegisterAbstractUserForm(UserCreationForm):
         :return: the first name or None if the first name is offensive
         """
         first_name = self.cleaned_data.get('first_name')
-        if is_offensive(first_name):
-            raise forms.ValidationError("The first name is offensive.")
+        analyzed_text = is_offensive(first_name)
+        if analyzed_text['is_offensive']:
+            raise forms.ValidationError("Content contains offensive content. Reason: " + analyzed_text['reason'])
         return first_name
 
     def clean_last_name(self) -> str or None:
@@ -39,8 +40,9 @@ class RegisterAbstractUserForm(UserCreationForm):
         :return: the last name or None if the last name is offensive
         """
         last_name = self.cleaned_data.get('last_name')
-        if is_offensive(last_name):
-            raise forms.ValidationError("The last name is offensive.")
+        analyzed_text = is_offensive(last_name)
+        if analyzed_text['is_offensive']:
+            raise forms.ValidationError("Content contains offensive content. Reason: " + analyzed_text['reason'])
         return last_name
 
     def clean_email(self) -> str or None:
@@ -49,8 +51,9 @@ class RegisterAbstractUserForm(UserCreationForm):
         :return: the email or None if the email is offensive
         """
         email = self.cleaned_data.get('email')
-        if is_offensive(email):
-            raise forms.ValidationError("The email is offensive.")
+        analyzed_text = is_offensive(email)
+        if analyzed_text['is_offensive']:
+            raise forms.ValidationError("Content contains offensive content. Reason: " + analyzed_text['reason'])
         return email
 
     def __init__(self, *args, **kwargs):

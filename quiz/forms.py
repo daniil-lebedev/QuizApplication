@@ -27,8 +27,9 @@ class CreateQuizForm(forms.ModelForm):
         :return: title of the quiz
         """
         title = self.cleaned_data.get('title')
-        if is_offensive(title):
-            raise forms.ValidationError("Title contains offensive words")
+        analyzed_text = is_offensive(title)
+        if analyzed_text['is_offensive']:
+            raise forms.ValidationError("Content contains offensive content. Reason: " + analyzed_text['reason'])
         return title
 
     def clean_description(self) -> str:
@@ -37,8 +38,9 @@ class CreateQuizForm(forms.ModelForm):
         :return: description of the quiz
         """
         description = self.cleaned_data.get('description')
-        if is_offensive(description):
-            raise forms.ValidationError("Description contains offensive words")
+        analyzed_text = is_offensive(description)
+        if analyzed_text['is_offensive']:
+            raise forms.ValidationError("Content contains offensive content. Reason: " + analyzed_text['reason'])
         return description
 
     def __init__(self, *args, **kwargs):
@@ -64,6 +66,17 @@ class CreateQuestionForm(forms.ModelForm):
             'quiz': forms.Select(attrs={'class': 'form-control'}),
         }
 
+    def clean_question(self) -> str:
+        """
+        This function checks if the question contains any offensive words.
+        :return: question of the quiz
+        """
+        question = self.cleaned_data.get('question')
+        analyzed_text = is_offensive(question)
+        if analyzed_text['is_offensive']:
+            raise forms.ValidationError("Content contains offensive content. Reason: " + analyzed_text['reason'])
+        return question
+
     # add warning message to the form
     def __init__(self, *args, **kwargs):
         super(CreateQuestionForm, self).__init__(*args, **kwargs)
@@ -79,6 +92,17 @@ class CreateOptionForm(forms.ModelForm):
     class Meta:
         model = Option
         fields = ['option', 'question', 'is_correct', 'point']
+
+    def clean_option(self) -> str:
+        """
+        This function checks if the option contains any offensive words.
+        :return: option of the quiz
+        """
+        option = self.cleaned_data.get('option')
+        analyzed_text = is_offensive(option)
+        if analyzed_text['is_offensive']:
+            raise forms.ValidationError("Content contains offensive content. Reason: " + analyzed_text['reason'])
+        return option
 
     # add warning message to the form
     def __init__(self, *args, **kwargs):
