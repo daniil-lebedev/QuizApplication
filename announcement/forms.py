@@ -71,7 +71,7 @@ class CreateAdminCommentForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(CreateAdminCommentForm, self).__init__(*args, **kwargs)
-        self.fields['content'].label = "Comment"
+        self.fields['content'].label = "Admin Comment"
 
 
 class CreateComment(forms.ModelForm):

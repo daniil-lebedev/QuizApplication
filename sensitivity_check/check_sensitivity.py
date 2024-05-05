@@ -38,7 +38,10 @@ def is_offensive(text: str) -> dict:
     if contains_offensive_keywords(text):
         return {'is_offensive': True, 'scores': scores, 'reason': bp.censor(text)}
 
-    # if combined value of neutral and positive is greater than negative, then it is not offensive
-    if sum([scores['neu'], scores['pos']]) > scores['neg']:
-        print("Not offensive")
-        return {'is_offensive': False, 'scores': scores, 'reason': None}
+    # using compound score to determine if the text is offensive
+    elif scores['compound'] < -0.5:
+        print(-0.5 > scores['compound'])
+        return {'is_offensive': True, 'scores': scores,
+                'reason': 'Negative sentiment, please write constructive feedback'}
+    else:
+        return {'is_offensive': False, 'scores': scores, 'reason': 'No offensive content detected'}

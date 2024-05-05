@@ -1,3 +1,5 @@
+from types import NoneType
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
@@ -73,13 +75,17 @@ def create_comment(request, pk) -> render:
     form = CreateComment()
     announcement = Announcement.objects.get(pk=pk)
     if request.method == "POST":
-        form = CreateComment(request.POST)
-        if form.is_valid():
-            comment = form.save(commit=False)
-            comment.announcement = announcement
-            comment.created_by = request.user.team_member.first()
-            form.save()
-            return redirect("announcement_detail", pk=pk)
+        try:
+            form = CreateComment(request.POST)
+            if form.is_valid():
+                comment = form.save(commit=False)
+                comment.announcement = announcement
+                comment.created_by = request.user.team_member.first()
+                form.save()
+                return redirect("announcement_detail", pk=pk)
+        except NoneType:
+            messages.warning(request, "An error occurred while creating the comment!")
+            return redirect("create_comment", pk=pk)
     return render(request, "announcement/create_comment.html", {"form": form})
 
 
@@ -95,16 +101,20 @@ def create_admin_comment(request, announcement_id):
 
     if request.method == "POST":
         form = CreateAdminCommentForm(request.POST)
-        if form.is_valid():
-            comment = form.save(commit=False)
-            comment.announcement = announcement
-            comment.created_by = TeamAdmin.objects.get(user=request.user, team=team)
-            if not comment.created_by:
-                messages.error(request, "You are not a registered team admin.")
-                return render(request, "announcement/create_comment.html", {"form": form})
-            comment.save()
-            messages.success(request, "Comment created successfully")
-            return redirect("announcement_detail", pk=announcement_id)
+        try:
+            if form.is_valid():
+                comment = form.save(commit=False)
+                comment.announcement = announcement
+                comment.created_by = TeamAdmin.objects.get(user=request.user, team=team)
+                if not comment.created_by:
+                    messages.error(request, "You are not a registered team admin.")
+                    return render(request, "announcement/create_comment.html", {"form": form})
+                comment.save()
+                messages.success(request, "Comment created successfully")
+                return redirect("announcement_detail", pk=announcement_id)
+        except NoneType:
+            messages.error(request, f"An error occurred while creating the comment!")
+            return redirect("create_admin_comment", announcement_id)
     else:
         form = CreateAdminCommentForm()
 
@@ -131,7 +141,6 @@ def delete_admin_comment(request, comment_id):
 @login_required
 def delete_comment(request, comment_id):
     comment = get_object_or_404(Comment, id=comment_id)
-    print(comment)
 
     # Check if the user is the creator of the comment or an admin
     if comment.created_by.user != request.user:

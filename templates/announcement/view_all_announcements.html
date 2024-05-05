@@ -2,31 +2,49 @@
 {% block title %} Announcements for you {% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-    <h1>Announcements for you</h1>
-    <div class="row">
-        {% for announcement in announcements %}
-        <div class="col-md-6 mb-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">{{ announcement.title }}</h5>
-                    <h6 class="card-subtitle mb-2 text-muted">Posted on: {{ announcement.created_at|date:"N j, Y" }}</h6>
-                    <p class="card-text">{{ announcement.description|truncatewords:20 }}</p>
-                    <a href="{{ announcement.get_absolute_url }}" class="btn btn-primary">View Details</a>
-                    {% if user.team_admin == announcement.created_by.id %}
-                        <a href="{% url 'create_admin_comment' announcement.id %}" class="btn btn-secondary">Leave Admin Comment</a>
-                    {% elif user.team_member == announcement.created_by.id %}
-                        <a href="{% url 'create_comment' announcement.id %}" class="btn btn-secondary">Leave Comment</a>
-                    {% else %}
-                    {% endif %}
+    {% if messages %}
+        <div class="container mt-5">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>
-        {% empty %}
-        <div class="col-12">
-            <p class="text-center">No announcements available to display.</p>
+    {% endif %}
+
+    <div class="container mt-4">
+        <h1>Announcements for you</h1>
+        <div class="row">
+            {% for announcement in announcements %}
+                <div class="col-md-6 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ announcement.title }}</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">Posted
+                                on: {{ announcement.created_at|date:"N j, Y" }}</h6>
+                            <p class="card-text">{{ announcement.description|truncatewords:20 }}</p>
+                            <a href="{{ announcement.get_absolute_url }}" class="btn btn-primary">View Details</a>
+                            {% if user.team_admin == announcement.created_by.id %}
+                                <a href="{% url 'create_admin_comment' announcement.id %}" class="btn btn-secondary">Leave
+                                    Admin Comment</a>
+                            {% elif user.team_member == announcement.created_by.id %}
+                                <a href="{% url 'create_comment' announcement.id %}" class="btn btn-secondary">Leave
+                                    Comment</a>
+                            {% else %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="col-12">
+                    <p class="text-center">No announcements available to display.</p>
+                </div>
+            {% endfor %}
         </div>
-        {% endfor %}
     </div>
-</div>
 {% endblock %}
