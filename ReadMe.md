@@ -1,37 +1,42 @@
+# OpenTrain: Open-source web-application for employee training. 🖥️
 
-# Company Training Application for small to medium sized companies
+![GitHub stars](https://img.shields.io/github/stars/daniil-lebedev/QuizApplication)
 
-[![Build Status](https://travis-ci.org/daniil-lebedev/QuizApplication.svg?branch=main)](https://travis-ci.org/daniil-lebedev/QuizApplication)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+![GitHub forks](https://img.shields.io/github/forks/daniil-lebedev/QuizApplication)
 
-Description of your project.
+![GitHub issues](https://img.shields.io/github/issues/daniil-lebedev/QuizApplication)
 
-## Table of Contents
+## Table of Contents 📖
 
 - [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
+    - [Prerequisites](#prerequisites)
+    - [Installation](#installation)
 - [Usage](#usage)
 - [Configuration](#configuration)
 - [Docker](#docker)
 - [Contributing](#contributing)
 - [License](#license)
 
-## Getting Started
+## Getting Started 🤔
+If you want to run this project locally, follow these steps.
+1. Ensure you know some Python and Django basics.
+2. Install Docker and Docker Compose if you want to use containers.
+3. Clone the repository and install the dependencies.
+4. Apply the database migrations.
 
-### Prerequisites
+### Prerequisites ⁉️
 
-- Python 3.x
-- Django 3.x
-- [Optional] Docker and Docker Compose for containerization
+- Python 3.9 or higher 🐍
+- Django 3.2 or higher
+- Docker and Docker Compose for containerization
 
 ### Installation
 
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/your-username/your-repo.git
-   cd your-repo
+   git clone daniil-lebedev/QuizApplication
+   cd QuizApplication
    ```
 
 2. Create a virtual environment:
@@ -42,17 +47,17 @@ Description of your project.
 
 3. Activate the virtual environment:
 
-   - On Windows:
+    - On Windows:
 
-     ```bash
-     .\venv\Scripts\activate
-     ```
+      ```bash
+      .\venv\Scripts\activate
+      ```
 
-   - On macOS and Linux:
+    - On macOS and Linux:
 
-     ```bash
-     source venv/bin/activate
-     ```
+      ```bash
+      source venv/bin/activate
+      ```
 
 4. Install dependencies:
 
