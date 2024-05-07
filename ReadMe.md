@@ -45,7 +45,7 @@ If you want to run this project locally, follow these steps.
 - Django 3.2 or higher
 - Docker and Docker Compose for containerization
 
-### Installation
+### Installation 🛠️
 
 1. Clone the repository:
 
@@ -100,7 +100,7 @@ If you want to run this project locally, follow these steps.
    python manage.py createsuperuser
    ```
 
-## Usage
+## Usage 🚀
 
 Run the development server:
 
@@ -110,12 +110,12 @@ python manage.py runserver
 
 Visit [http://localhost:8000](http://localhost:8000) in your browser.
 
-## Configuration
+## Configuration 🛠️
 
 - Configure your Django settings in the `settings.py` file.
 - Keep sensitive information such as the secret key in environment variables.
 
-## Docker
+## Docker 🐳
 
 If you prefer using Docker for development, follow these steps:
 
@@ -133,9 +133,9 @@ If you prefer using Docker for development, follow these steps:
 
 3. Access the application at [http://localhost:8000](http://localhost:8000).
 
-## Applications
+## Applications 📦
 
-1. ### Announcement
+1. ### Announcement 
    Purpose: Manages announcements within the application. It allows team administrators to create, update, and delete
    announcements that are relevant to their team members. This service also likely handles the viewing permissions and
    interactions such as reading or commenting on announcements.
@@ -182,7 +182,7 @@ If you prefer using Docker for development, follow these steps:
     in and log out), user registration, and possibly user-specific data handling like preferences and history within the
     application.
 
-## Contributing
+## Contributing 🤝
 
 Contributions are welcome! Please follow these steps:
 
@@ -192,6 +192,6 @@ Contributions are welcome! Please follow these steps:
 4. Push to the branch: `git push origin feature/your-feature`.
 5. Submit a pull request.
 
-## License
+## License 📜
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](licesne.md) file for details.
