@@ -1,15 +1,23 @@
 {% extends 'base/base.html' %}
 {% block title %} Manage Your teams {% endblock %}
 {% block content %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
     <h1>Manage Your Teams</h1>
     {% for team in teams %}
         <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title"> Name: {{ team.name }}</h5>
-                    <h6 class="card-subtitle mb-2 text-muted">Owner: {{ team.created_at }}</h6>
-                    <p class="card-text"> Description: {{ team.description }}</p>
-                    <p class="card-text"> Created by: {{ team.team_of_admin.name }}</p>
-                </div>
+            <div class="card-body">
+                <h5 class="card-title"> Name: {{ team.name }}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">Owner: {{ team.created_at }}</h6>
+                <p class="card-text"> Description: {{ team.description }}</p>
+                <p class="card-text"> Created by: {{ team.team_of_admin.name }}</p>
+            </div>
         </div>
     {% endfor %}
 {% endblock %}

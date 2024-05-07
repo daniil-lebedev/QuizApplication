@@ -2,6 +2,14 @@
 {% block title %} User Profile {% endblock %}
 
 {% block content %}
+     {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
     <div class="container mt-4">
         <h1 class="display-4">Hello, {{ user.first_name }} {{ user.last_name }}</h1>
 

@@ -2,27 +2,35 @@
 {% block title %}Teams{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-    <h1 class="mb-4 text-center">Explore Our Teams</h1>
-    <div class="row">
-        {% for team in teams %}
-            <div class="col-md-4 mb-4">
-                <div class="card border-0 shadow-sm h-100">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ team.name }}</h5>
-                        <p class="card-text">{{ team.description|truncatewords:20 }}</p>
-                        <a href="{{ team.get_absolute_url }}" class="btn btn-secondary">View Details</a>
-                        {% if team.can_join %}
-                            <a href="{% url 'join_team' team.id %}" class="btn btn-primary">Join Team</a>
-                        {% endif %}
+    <div class="container mt-5">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+        <h1 class="mb-4 text-center">Explore Our Teams</h1>
+        <div class="row">
+            {% for team in teams %}
+                <div class="col-md-4 mb-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ team.name }}</h5>
+                            <p class="card-text">{{ team.description|truncatewords:20 }}</p>
+                            <a href="{{ team.get_absolute_url }}" class="btn btn-secondary">View Details</a>
+                            {% if team.can_join %}
+                                <a href="{% url 'join_team' team.id %}" class="btn btn-primary">Join Team</a>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
-            </div>
-        {% empty %}
-            <div class="col-12">
-                <p class="text-center">No teams available at the moment. Check back later!</p>
-            </div>
-        {% endfor %}
+            {% empty %}
+                <div class="col-12">
+                    <p class="text-center">No teams available at the moment. Check back later!</p>
+                </div>
+            {% endfor %}
+        </div>
     </div>
-</div>
 {% endblock %}
