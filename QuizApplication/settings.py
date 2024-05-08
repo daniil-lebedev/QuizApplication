@@ -32,7 +32,7 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DJANGO_DEBUG')
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'web-production-5bbf.up.railway.app']
 
 SESSION_EXPIRE_SECONDS = 1800  # Expire after 30 minutes
 SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True  # Expire after inactivity
