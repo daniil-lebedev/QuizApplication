@@ -18,7 +18,7 @@ RUN pip install --upgrade pip && pip install -r requirements.txt
 EXPOSE 8000
 
 # Run Django migrations
-RUN python manage.py makemigrations && python manage.py migrate && python manage.py collectstatic --noinput
+RUN python manage.py makemigrations && python manage.py migrate
 
 # Command to run the app
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
