@@ -29,10 +29,11 @@ load_dotenv()
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
+print(SECRET_KEY)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DJANGO_DEBUG')
-ALLOWED_HOSTS = [os.getenv('RAILWAY_PUBLIC_DOMAIN', 'localhost')]
+DEBUG = False
+ALLOWED_HOSTS = ['*']
 
 SESSION_EXPIRE_SECONDS = 1800  # Expire after 30 minutes
 SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True  # Expire after inactivity
